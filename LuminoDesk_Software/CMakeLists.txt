@@ -26,6 +26,10 @@ pico_sdk_init()
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(LuminoDesk_Software main.c )
+add_subdirectory(lib/hardwaredef)
+include_directories(/lib/hardwaredef)
+
+
 
 pico_set_program_name(LuminoDesk_Software "LuminoDesk_Software")
 pico_set_program_version(LuminoDesk_Software "0.1")
@@ -52,6 +56,7 @@ target_link_libraries(LuminoDesk_Software
         hardware_watchdog
         hardware_clocks
         pico_cyw43_arch_none
+        hardwaredef
         )
 
 pico_add_extra_outputs(LuminoDesk_Software)
