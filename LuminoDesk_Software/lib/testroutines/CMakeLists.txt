@@ -1,5 +1,6 @@
-add_library(hardwaredef hardwaredef.c)
-target_link_libraries(hardwaredef PUBLIC
+
+add_library(testroutines testroutines.c)
+target_link_libraries(testroutines PUBLIC
         pico_stdlib
         hardware_spi
         hardware_gpio

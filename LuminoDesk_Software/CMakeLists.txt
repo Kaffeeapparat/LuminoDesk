@@ -5,9 +5,6 @@ cmake_minimum_required(VERSION 3.13)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-# Initialise pico_sdk from installed location
-# (note this can come from environment, CMake cache etc)
-set(PICO_SDK_PATH "${CMAKE_CURRENT_SOURCE_DIR}/pico-sdk")
 
 set(PICO_BOARD pico_w CACHE STRING "Board type")
 
@@ -28,6 +25,8 @@ pico_sdk_init()
 add_executable(LuminoDesk_Software main.c )
 add_subdirectory(lib/hardwaredef)
 include_directories(/lib/hardwaredef)
+add_subdirectory(lib/testroutines)
+include_directories(/lib/testroutines)
 
 
 
@@ -57,6 +56,7 @@ target_link_libraries(LuminoDesk_Software
         hardware_clocks
         pico_cyw43_arch_none
         hardwaredef
+        testroutines
         )
 
 pico_add_extra_outputs(LuminoDesk_Software)
