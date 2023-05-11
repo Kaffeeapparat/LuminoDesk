@@ -24,3 +24,24 @@ void msSinceBoot(){
         
     }
 }
+
+void blinkOnce(uint32_t ms){
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+    sleep_ms(ms);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+    sleep_ms(ms);
+}
+
+void signalNTimes(uint32_t time_us,int8_t pulses, uint8_t pin)
+{
+    gpio_init(pin);
+    gpio_set_dir(pin,1);
+    
+    do{
+    gpio_put(pin,1);
+    sleep_us(time_us);
+    gpio_put(pin,0);
+    sleep_us(time_us);
+    pulses--;
+    }while(pulses>0);
+}

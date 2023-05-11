@@ -11,4 +11,5 @@ target_link_libraries(hardwaredef PUBLIC
         hardware_watchdog
         hardware_clocks
         pico_cyw43_arch_none
+        testroutines
         )
