@@ -11,10 +11,10 @@ extern uint8_t tick;
 bool generateTick(struct repeating_timer *t);
 void printLastInput();
 void updateShiftregister();
+void checkButtonDebounceLock();
 
 
-int main()
-{
+int main() {
     stdio_init_all();
     if (cyw43_arch_init()) {
         printf("WiFi init failed");
@@ -27,18 +27,18 @@ int main()
     shiftregisterbitmask ^=(1<<SHIFTMASK_SMR0);
     
     //set alarm to update the shiftregister routinely
-    struct repeating_timer timer;
-    add_repeating_timer_ms(100, generateTick, NULL, &timer);
+    static struct repeating_timer timer;
+    add_repeating_timer_ms(1, generateTick, NULL, &timer);
     while(1==1){
         tight_loop_contents();
-
-        if(tick==(10||30||50||70||90));
+        checkButtonDebounceLock();
+        if((tick==10)||(tick==60))
         {
             if(!pressed_button_lock){
                 shiftregisterbitmask^=((1<<SHIFTMASK_SMR0)|(1<<SHIFTMASK_SMR1));
             }
             updateShiftregister();
-            while(tick==10)
+            while((tick==10)||(tick==60))
             {
                 tight_loop_contents();
             }
@@ -50,6 +50,10 @@ int main()
             {
                 tight_loop_contents();
             }
+        }
+        if((tick%2)==0)
+        {
+            //signalNTimes(10,1,0);
         }
 
         
@@ -70,19 +74,11 @@ int main()
 
 bool generateTick(struct repeating_timer *t)
 {
-
-
     if(tick<100){
         tick++;
     }
     else{
         tick=0;
-        if(cyw43_arch_gpio_get(CYW43_WL_GPIO_LED_PIN)){
-            cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN,0);
-        }
-        else{
-            cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN,1);
-        }
     }
     return true;
 } 
@@ -98,23 +94,20 @@ void updateShiftregister() {
         
         
         if(shiftregisterbitmask & (1<< k)){
-            if(pressed_button_lock && ((k==SHIFTMASK_SMR0)||(k==SHIFTMASK_SMR1))){
-            tight_loop_contents();
-            }
                 gpio_put(SHIFT_DATA,1);
-            }
+        }
             
         gpio_put(SHIFT_CLK,1);
-        busy_wait_us(10);
+        sleep_us(10);
         gpio_put(SHIFT_CLK,0);
-        busy_wait_us(10);
+        sleep_us(10);
         gpio_put(SHIFT_DATA,0);
-        busy_wait_us(10);
+        sleep_us(10);
                 
     }
                      
             gpio_put(SHIFT_LATCH,1);
-            busy_wait_us(10);
+            sleep_us(10);
             gpio_put(SHIFT_LATCH,0);  
 }
 
@@ -186,3 +179,16 @@ void printLastInput(){
     printf("\n");
 }
 
+void checkButtonDebounceLock(){
+
+uint32_t current_time=to_ms_since_boot (get_absolute_time());
+
+for(int row=0;row<2;row++){
+    for(int pos=0;pos<5;pos++){
+            if(button_map[row][pos].debouncelock>current_time){
+                pressed_button_lock=0;
+            }
+        }
+
+    }
+}

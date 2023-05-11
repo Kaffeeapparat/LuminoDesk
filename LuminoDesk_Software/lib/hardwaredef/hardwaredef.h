@@ -158,6 +158,8 @@ typedef struct{
     uint gpio;
     uint8_t row;
     uint32_t timestamp;
+    //After the button was sucessfully pressed, this time constant blocks relasing debounce
+    uint32_t debouncelock;
     ButtonAction longpress;
     ButtonAction shortpress;
 }button_t;
@@ -167,4 +169,3 @@ extern button_t button_map[2][5];
 extern ButtonAction lastinput;
 extern int8_t pressed_button_lock;
 
-void blinkOnce(uint32_t ms);
