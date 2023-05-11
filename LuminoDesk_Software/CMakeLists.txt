@@ -33,8 +33,8 @@ include_directories(/lib/testroutines)
 pico_set_program_name(LuminoDesk_Software "LuminoDesk_Software")
 pico_set_program_version(LuminoDesk_Software "0.1")
 
-pico_enable_stdio_uart(LuminoDesk_Software 0)
-pico_enable_stdio_usb(LuminoDesk_Software 1)
+pico_enable_stdio_uart(LuminoDesk_Software 1)
+pico_enable_stdio_usb(LuminoDesk_Software 0)
 
 # Add the standard library to the build
 target_link_libraries(LuminoDesk_Software
