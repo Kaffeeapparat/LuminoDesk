@@ -84,8 +84,8 @@ extern uint32_t shiftregisterbitmask;
 
 //Rotary encoder input
 
-#define QUAD_1  27
-#define QUAD_2  28
+#define QUAD_1  14
+#define QUAD_2  15
 
 //Shiftregister Mask Position
 //Position of functions and elements in the chift register mask
@@ -131,6 +131,9 @@ void changeVoltageChannel(uint8_t channel, uint8_t voltage);
 
 void initGPIO(void);
 
+bool rotaryencoder1_isr();
+void rotaryencoder1_init();
+
 //PossibleButtonPresses
 typedef enum {
     onoff_long,
@@ -155,6 +158,26 @@ typedef enum {
 } ButtonAction;
 
 typedef struct{
+    //GPIOs of both phases
+
+    //Phase 1 is the actual indent
+    int8_t phase1;
+    //phase two represents the directional component
+    int8_t phase2;
+    
+    //Timestamps for debouncing
+    uint32_t timestampp1;
+    uint32_t timestampp2;
+
+    //Saved States for both phases
+    uint32_t laststatep1;
+    uint32_t laststatep2;
+}encoder_t;
+
+extern int32_t tmpencoderval;
+
+
+typedef struct{
     uint gpio;
     uint8_t row;
     uint32_t timestamp;
@@ -166,6 +189,7 @@ typedef struct{
 
 
 extern button_t button_map[2][5];
+extern encoder_t encoder_map[1];
 extern ButtonAction lastinput;
 extern int8_t pressed_button_lock;
 

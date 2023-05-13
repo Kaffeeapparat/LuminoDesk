@@ -6,13 +6,23 @@
 //All "private" function protoypes
 void button_isr(uint gpio, uint32_t events);
 
+//void rotaryencoder1_isr(uint gpio, uint32_t events);
+bool rotaryencoder1_isr();
+
+
 //char* button_map[2][5]={{"effect","empty","0","channelS","rgbS"},{"power","const","channelonoff","remote","speed"}};
 uint8_t tick;
+int32_t tmpencoderval;
 uint32_t shiftregisterbitmask=0;
 ButtonAction lastinput;
 
 
 int inputpins[]={SMC1,SMC2,SMC3,SMC4,SMC5,QUAD_1,QUAD_2};
+
+
+encoder_t quad_map[1]={
+    {QUAD_1,QUAD_2,0,0,0,0},
+};
 
 
 button_t button_map[2][5] ={
@@ -109,6 +119,17 @@ void initGPIO(void){
 
     }   
 
+    //Init the Rotary Encoder Pins
+        gpio_init(QUAD_1);
+        gpio_init(QUAD_2);
+
+        gpio_set_dir(QUAD_1, GPIO_IN);
+        gpio_set_dir(QUAD_2, GPIO_IN);
+        gpio_pull_up(QUAD_1);
+        gpio_pull_up(QUAD_2);
+        //gpio_set_irq_enabled_with_callback(QUAD_1,GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &rotaryencoder1_isr);
+        //gpio_set_irq_enabled_with_callback(QUAD_2,GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &rotaryencoder1_isr);
+
     //Enable GPIO Interrupts
         //Populate buttonpresses
 
@@ -159,7 +180,7 @@ void button_isr(uint gpio, uint32_t events)
         row=0;
     }
     else{
-        goto pseudoreturn;
+        return;
     }
 
 
@@ -170,14 +191,14 @@ void button_isr(uint gpio, uint32_t events)
 
     }
     if(pos==-1){
-        goto pseudoreturn;
+        return;
     }
 
     i=pos;
     uint32_t current_time=to_ms_since_boot (get_absolute_time());
     if(button_map[row][pos].debouncelock>current_time){
         pressed_button_lock=0;
-        goto pseudoreturn;
+        return;
     }
 
     if(GPIO_IRQ_EDGE_FALL==events)
@@ -224,13 +245,59 @@ void button_isr(uint gpio, uint32_t events)
             pressed_button_lock=0;
         }
     }
-    pseudoreturn:;
+}
+
+/*
+* Encoder init routine
+* Inspired by https://www.mikrocontroller.net/articles/Drehgeber
+*/
+void rotaryencoder1_init(){
+
+    quad_map[0].laststatep1 = gpio_get(quad_map[0].phase1);
+    quad_map[0].laststatep2 = gpio_get(quad_map[0].phase2);
 }
 
 
-    void handle_button_event(){
+/*
+* Encoder prcessing routine
+* Inspired by https://www.mikrocontroller.net/articles/Drehgeber
+*/
+bool rotaryencoder1_isr(){
+    /*
+    uint32_t currenttime = to_us_since_boot(get_absolute_time());
+    uint32_t deltat; 
 
-
-
-        
+    if(gpio==quad_map[0].phase1)
+    {
+        deltat=currenttime-quad_map[0].timestampp1;
+        if(deltat<900)
+        {
+            return;
+        }
+        quad_map[0].timestampp1=currenttime;
     }
+    if(gpio==quad_map[0].phase2)
+    {
+        deltat=currenttime-quad_map[0].timestampp2;
+        if(deltat<900)
+        {
+            return;
+        }
+        quad_map[0].timestampp2=currenttime;
+    }
+*/
+
+    int8_t new,diff,last =0;
+
+    if (gpio_get(quad_map[0].phase1)) new=3;
+    if (!gpio_get(quad_map[0].phase2)) new^=1;
+    last=(quad_map[0].laststatep1 << 1)|(quad_map[0].laststatep2);
+    diff=last-new;
+    if (diff & 1)
+    {
+        quad_map[0].laststatep1 = gpio_get(quad_map[0].phase1);
+        quad_map[0].laststatep2 = gpio_get(quad_map[0].phase2);
+        tmpencoderval += (diff & 2)-1;
+    }
+    return 1;
+}

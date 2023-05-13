@@ -7,6 +7,7 @@ extern uint32_t shiftregisterbitmask;
 extern ButtonAction lastinput;
 extern int8_t pressed_button_lock;
 extern uint8_t tick;
+extern int32_t tmpencoderval;
 
 bool generateTick(struct repeating_timer *t);
 void printLastInput();
@@ -24,11 +25,16 @@ int main() {
         return -1;
     }
     initGPIO();
+    rotaryencoder1_init();
     shiftregisterbitmask ^=(1<<SHIFTMASK_SMR0);
     
     //set alarm to update the shiftregister routinely
     static struct repeating_timer timer;
     add_repeating_timer_ms(1, generateTick, NULL, &timer);
+    //set alarm for sampling the rotary encoder
+
+    static struct repeating_timer encoder1;
+    add_repeating_timer_us(1300, rotaryencoder1_isr, NULL, &encoder1);
     while(1==1){
         tight_loop_contents();
         checkButtonDebounceLock();
@@ -46,6 +52,7 @@ int main() {
         if(tick==0)
         {
             printLastInput();
+            printf("\nLast Encoder Value:%d\n",tmpencoderval);
             while(tick==0)
             {
                 tight_loop_contents();
