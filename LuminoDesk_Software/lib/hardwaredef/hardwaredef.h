@@ -33,17 +33,17 @@ extern uint32_t shiftregisterbitmask;
 #define LED_R           12
 #define LED_B           10
 #define LED_G           11
-#define LED_CH1         2
-#define LED_CH2         4
-#define LED_CH3         3
+#define LED_CH0         2
+#define LED_CH1         4
+#define LED_CH2         3
 
 //Contrtollsignals
-#define CH1_ENB_CHN     12
-#define CH2_ENB_CHN     13
-#define CH3_ENB_CHN     14
-#define CH1_CHG_VLT     15
-#define CH2_CHG_VLT     16
-#define CH3_CHG_VLT     17
+#define CH0_ENB_CHN     12
+#define CH1_ENB_CHN     13
+#define CH2_ENB_CHN     14
+#define CH0_CHG_VLT     15
+#define CH1_CHG_VLT     16
+#define CH2_CHG_VLT     17
 
 //Pin Definitions for the Pico_W Hardware Revision 1
 
@@ -61,26 +61,27 @@ extern uint32_t shiftregisterbitmask;
 #define SHIFT_CLK       17
 #define SHIFT_LATCH     16
 
-//LED Channel1 
+//LED Channel0
+
+#define CH0_LED_R
+#define CH0_LED_G
+#define CH0_LED_B
+#define CH0_CHG_MOD
+
+//LED Channel2
 
 #define CH1_LED_R
 #define CH1_LED_G
 #define CH1_LED_B
 #define CH1_CHG_MOD
 
-//LED Channel2
+//LED Channel3
 
 #define CH2_LED_R
 #define CH2_LED_G
 #define CH2_LED_B
 #define CH2_CHG_MOD
 
-//LED Channel3
-
-#define CH3_LED_R
-#define CH3_LED_G
-#define CH3_LED_B
-#define CH3_CHG_MOD
 
 //Rotary encoder input
 
@@ -96,7 +97,16 @@ extern uint32_t shiftregisterbitmask;
 #define SMCR1            1
 #define SMCR2            0
 
+//Channel Parameters
+#define CHANNEL_0 0
+#define CHANNEL_1 1
+#define CHANNEL_2 2
 
+#define VOLTAGE_LOW 5
+#define VOLTAGE_HIGH 12
+
+#define MODE_ANALOG  0
+#define MODE_DIGITAL 1
 
 
 
@@ -107,27 +117,6 @@ extern uint32_t shiftregisterbitmask;
 
 void turnOffSignal(uint8_t led);
 void turnOnSignal(uint8_t led);
-
-
-// CH3_ENB_CHN
-//Channel 1-3
-//Mode MODE_ANALOG or MODE_DIGITAL
-void changeModeChannel(uint8_t channel, uint8_t mode);
-
-// CH3_CHG_VLT
-//Channel 1-3
-//Voltage V_LOW or V_HIGH
-void changeVoltageChannel(uint8_t channel, uint8_t voltage);
-
-#define CHANNEL_1 1
-#define CHANNEL_2 2
-#define CHANNEL_3 3
-
-#define VOLTAGE_LOW 5
-#define VOLTAGE_HIGH 12
-
-#define MODE_ANALOG  0
-#define MODE_DIGITAL 1
 
 void initGPIO(void);
 
