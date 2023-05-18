@@ -1,11 +1,14 @@
 #include <inttypes.h>
 #include <time.h>
+
 #include "pico/stdlib.h"
 #include "pico/stdio.h"
+#include "pico/cyw43_arch.h"
+
 #include "hardware/gpio.h"
 #include "hardware/timer.h"
 #include "hardware/irq.h"
-#include "pico/cyw43_arch.h"
+
 
 /*
 *
@@ -63,24 +66,24 @@ extern uint32_t shiftregisterbitmask;
 
 //LED Channel0
 
-#define CH0_LED_R
-#define CH0_LED_G
-#define CH0_LED_B
-#define CH0_CHG_MOD
+#define CH0_LED_R   0
+#define CH0_LED_G   0
+#define CH0_LED_B   0
+#define CH0_CHG_MOD 0
 
 //LED Channel2
 
-#define CH1_LED_R
-#define CH1_LED_G
-#define CH1_LED_B
-#define CH1_CHG_MOD
+#define CH1_LED_R   0
+#define CH1_LED_G   0
+#define CH1_LED_B   0
+#define CH1_CHG_MOD 0
 
 //LED Channel3
 
-#define CH2_LED_R
-#define CH2_LED_G
-#define CH2_LED_B
-#define CH2_CHG_MOD
+#define CH2_LED_R   0
+#define CH2_LED_G   0
+#define CH2_LED_B   0
+#define CH2_CHG_MOD 0
 
 
 //Rotary encoder input

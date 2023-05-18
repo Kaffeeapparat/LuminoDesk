@@ -54,48 +54,7 @@ void turnOffSignal(uint8_t led)
 }
 
 
-void changeModeChannel(uint8_t channel, uint8_t mode)
-{
-    if (channel == CHANNEL_1)
-    {
-        if (channel == CHANNEL_3)
-        {
-            if (mode == MODE_DIGITAL)
-            {
-            }
-            if (mode == MODE_ANALOG)
-            {
-            }
-        }
-    }
-    if (channel == CHANNEL_2)
-    {
-        if (channel == CHANNEL_3)
-        {
-            if (mode == MODE_DIGITAL)
-            {
-            }
-            if (mode == MODE_ANALOG)
-            {
-            }
-        }
-        if (channel == CHANNEL_3)
-        {
-            if (mode == MODE_DIGITAL)
-            {
-            }
-            if (mode == MODE_ANALOG)
-            {
-            }
-        }
-    }
-}
 
-void changeVoltageChannel(uint8_t channel, uint8_t voltage)
-    {
-        // Implement code to change the voltage of the specified channel
-        // using the given voltage (V_LOW or V_HIGH)
-    }
 
 void initGPIO(void){
 

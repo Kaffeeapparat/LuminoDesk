@@ -27,6 +27,8 @@ add_subdirectory(lib/hardwaredef)
 include_directories(/lib/hardwaredef)
 add_subdirectory(lib/testroutines)
 include_directories(/lib/testroutines)
+add_subdirectory(lib/ledchannel)
+include_directories(/lib/ledchannel)
 
 
 
@@ -57,6 +59,7 @@ target_link_libraries(LuminoDesk_Software
         pico_cyw43_arch_none
         hardwaredef
         testroutines
+        ledchannel
         )
 
 pico_add_extra_outputs(LuminoDesk_Software)
