@@ -40,5 +40,5 @@ void changeModeChannel(uint8_t channel, uint8_t mode);
 void changeEnableChannel(uint8_t channel, bool enable);
 void changeRgbChannel(uint8_t channel);
 
-void updateRgbChannelData(uint8_t channel, uint32_t color_e, uint32_t color_b, uint32_t color_g);
+void updateRgbChannelData(uint8_t channel,int32_t color_r,int32_t color_b,int32_t color_g);
 void updateRgbStripeData(uint8_t channel);
