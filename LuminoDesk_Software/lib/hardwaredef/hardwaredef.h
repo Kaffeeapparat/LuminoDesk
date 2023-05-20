@@ -1,3 +1,6 @@
+#ifndef HARDWAREDEF_H
+#define HARDWAREDEF_H
+
 #include <inttypes.h>
 #include <time.h>
 
@@ -57,7 +60,7 @@ extern uint32_t shiftregisterbitmask;
 #define SMC2 22 //constant checked
 #define SMC3 28  //speed checked
 #define SMC4 20 //remote checked
-#define SMC5 21  //channelonoffchecked
+#define SMC5 19  //channelonoffchecked
 
 //Shiftregisterlines
 
@@ -192,3 +195,5 @@ extern int8_t pressed_button_lock;
 //PWM Wrap for core frequency of 125Mhz and a PWM frequency of 20khz
 
 #define PWM_WRAP 6250
+
+#endif

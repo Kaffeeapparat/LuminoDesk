@@ -14,6 +14,8 @@ bool generateTick(struct repeating_timer *t);
 void printLastInput();
 void updateShiftregister();
 void checkButtonDebounceLock();
+void updateLedOnActiveChannel(device_t* instance);
+void updateLedOnActiveColor(device_t* instance);
 
 
 int main() {
@@ -36,11 +38,15 @@ int main() {
 
     //Struct which saves the device state
     device_t instance;
-
+    instance.active_channel=0;
+    instance.active_color=red;
 
     static struct repeating_timer encoder1;
     add_repeating_timer_us(1300, rotaryencoder1_isr, NULL, &encoder1);
 
+    updateActiveColor(&instance);
+    updateLedOnActiveChannel(&instance);
+    updateShiftregister();
     while(1==1){
         tight_loop_contents();
         checkButtonDebounceLock();
@@ -59,6 +65,21 @@ int main() {
         {
             printLastInput();
             printf("\nLast Encoder Value:%d\n",tmpencoderval);
+            
+            if(lastinput==rgbs_short)
+            {
+                updateActiveColor(&instance);
+                updateLedOnActiveColor(&instance);
+                lastinput=dummy;
+            }
+            if(lastinput==channels_short)
+            {
+                updateActiveChannel(&instance);
+                updateLedOnActiveChannel(&instance);
+                lastinput=dummy;
+            }
+
+
             while(tick==0)
             {
                 tight_loop_contents();
@@ -204,4 +225,47 @@ uint32_t current_time=to_ms_since_boot (get_absolute_time());
             }
 
         }
+}
+
+void updateLedOnActiveChannel(device_t* instance){
+
+    turnOffSignal(LED_CH0);
+    turnOffSignal(LED_CH1);
+    turnOffSignal(LED_CH2);
+
+    if(instance->active_channel==0)
+    {
+        turnOnSignal(LED_CH0);
+    }
+    else if(instance->active_channel==1)
+    {
+        turnOnSignal(LED_CH1);
+    }
+    else if(instance->active_channel==2)
+    {
+        turnOnSignal(LED_CH2);
+    }
+    else
+    {
+        printf("/nERROR: Unavailable Channel/n");
+    }
+}
+void updateLedOnActiveColor(device_t* instance){
+
+    turnOffSignal(LED_R);
+    turnOffSignal(LED_B);
+    turnOffSignal(LED_G);   
+
+    switch (instance->active_color) {
+        case red:
+            turnOnSignal(LED_R);
+            break;
+        case green:
+            turnOnSignal(LED_G);
+            break;
+        case blue:
+            turnOnSignal(LED_B);
+            break;
+    }
+
 }

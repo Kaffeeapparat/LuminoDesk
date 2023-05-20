@@ -36,8 +36,8 @@ button_t button_map[2][5] ={
     {SMC1,SMCR2,0,0, effect_long, effect_short},
     {SMC2,SMCR2,0,0, empty_long, empty_short},
     {SMC3,SMCR2,0,0,dummy,dummy},
-    {SMC4,SMCR2,0,0, rgbs_long, rgbs_short},
-    {SMC5,SMCR2,0,0, channels_long, channels_short},
+    {SMC4,SMCR2,0,0, channels_long, channels_short},
+    {SMC5,SMCR2,0,0, rgbs_long, rgbs_short},
 }};
 const int num_buttons = sizeof(button_map) / sizeof(button_t);
 

@@ -1,7 +1,6 @@
-#include "../hardwaredef/hardwaredef.h"
 #include "../ledchannel/ledchannel.h"
 
-struct typedef 
+typedef struct
 {
     uint8_t state;
     
@@ -13,11 +12,10 @@ struct typedef
 typedef enum {
     init,
     waitforaction,
-    effectselsect,
+    effect,
     constant,
     mode,
     remoteisconnected,
-    constant,
     keepconnection,
     recievedcommando,
 

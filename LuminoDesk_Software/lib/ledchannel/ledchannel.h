@@ -18,7 +18,6 @@ typedef struct
     uint32_t color_b;
     uint32_t color_g;
 
-
     uint8_t color_r_signal;
     uint8_t color_b_signal;
     uint8_t color_g_signal;
