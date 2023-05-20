@@ -29,8 +29,8 @@ add_subdirectory(lib/testroutines)
 include_directories(/lib/testroutines)
 add_subdirectory(lib/ledchannel)
 include_directories(/lib/ledchannel)
-
-
+add_subdirectory(lib/menu)
+include_directories(/lib/menu)
 
 pico_set_program_name(LuminoDesk_Software "LuminoDesk_Software")
 pico_set_program_version(LuminoDesk_Software "0.1")
@@ -60,6 +60,7 @@ target_link_libraries(LuminoDesk_Software
         hardwaredef
         testroutines
         ledchannel
+        menu
         )
 
 pico_add_extra_outputs(LuminoDesk_Software)

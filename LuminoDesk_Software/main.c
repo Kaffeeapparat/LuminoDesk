@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "lib/hardwaredef/hardwaredef.h"
 #include "lib/testroutines/testroutines.h"
+#include "lib/menu/menu.h"
 
 //extern char* button_map[2][5];
 extern uint32_t shiftregisterbitmask;
@@ -33,8 +34,13 @@ int main() {
     add_repeating_timer_ms(1, generateTick, NULL, &timer);
     //set alarm for sampling the rotary encoder
 
+    //Struct which saves the device state
+    device_t instance;
+
+
     static struct repeating_timer encoder1;
     add_repeating_timer_us(1300, rotaryencoder1_isr, NULL, &encoder1);
+
     while(1==1){
         tight_loop_contents();
         checkButtonDebounceLock();
@@ -187,15 +193,15 @@ void printLastInput(){
 }
 
 void checkButtonDebounceLock(){
-
+    
 uint32_t current_time=to_ms_since_boot (get_absolute_time());
 
-for(int row=0;row<2;row++){
-    for(int pos=0;pos<5;pos++){
-            if(button_map[row][pos].debouncelock>current_time){
-                pressed_button_lock=0;
+    for(int row=0;row<2;row++){
+        for(int pos=0;pos<5;pos++){
+                if(button_map[row][pos].debouncelock>current_time){
+                    pressed_button_lock=0;
+                }
             }
-        }
 
-    }
+        }
 }
