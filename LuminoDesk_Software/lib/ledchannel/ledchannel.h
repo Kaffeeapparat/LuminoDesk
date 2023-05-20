@@ -1,5 +1,8 @@
 #include "../hardwaredef/hardwaredef.h"
 
+//Number of channels
+#define NUMBER_OF_CHANNELS 3
+
 typedef struct
 {
     uint8_t id;
@@ -26,6 +29,12 @@ typedef struct
     bool effect;
     void *effectfunc;
 }channel_t;
+
+typedef enum{
+    red,
+    green,
+    blue,
+}RGBcolor;
 
 extern channel_t channel1;
 extern channel_t channel2;

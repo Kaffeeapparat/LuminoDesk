@@ -2,6 +2,7 @@ add_library(hardwaredef hardwaredef.c)
 target_link_libraries(hardwaredef PUBLIC
         pico_stdlib
         hardware_spi
+        hardware_pwm
         hardware_gpio
         hardware_i2c
         hardware_dma

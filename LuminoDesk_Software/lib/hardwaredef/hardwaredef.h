@@ -8,6 +8,7 @@
 #include "hardware/gpio.h"
 #include "hardware/timer.h"
 #include "hardware/irq.h"
+#include "hardware/pwm.h"
 
 
 /*
@@ -185,3 +186,9 @@ extern encoder_t encoder_map[1];
 extern ButtonAction lastinput;
 extern int8_t pressed_button_lock;
 
+
+//PWM Constants
+
+//PWM Wrap for core frequency of 125Mhz and a PWM frequency of 20khz
+
+#define PWM_WRAP 6250
