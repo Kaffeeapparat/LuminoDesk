@@ -150,6 +150,8 @@ typedef enum {
     channels_long,
     empty_long,
     empty_short,
+    rotary_short,
+    rotary_long,
     dummy
 } ButtonAction;
 
