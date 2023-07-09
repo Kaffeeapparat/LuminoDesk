@@ -70,24 +70,24 @@ extern uint32_t shiftregisterbitmask;
 
 //LED Channel0
 
-#define CH0_LED_R   0
-#define CH0_LED_G   0
-#define CH0_LED_B   0
-#define CH0_CHG_MOD 0
+#define CH0_LED_R   2
+#define CH0_LED_G   3
+#define CH0_LED_B   4
+#define CH0_CHG_MOD 8
 
 //LED Channel2
 
-#define CH1_LED_R   0
-#define CH1_LED_G   0
-#define CH1_LED_B   0
-#define CH1_CHG_MOD 0
+#define CH1_LED_R   8
+#define CH1_LED_G   8
+#define CH1_LED_B   8
+#define CH1_CHG_MOD 8
 
 //LED Channel3
 
-#define CH2_LED_R   0
-#define CH2_LED_G   0
-#define CH2_LED_B   0
-#define CH2_CHG_MOD 0
+#define CH2_LED_R   8
+#define CH2_LED_G   8
+#define CH2_LED_B   8
+#define CH2_CHG_MOD 8
 
 
 //Rotary encoder input

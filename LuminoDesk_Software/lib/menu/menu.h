@@ -3,10 +3,10 @@
 typedef struct
 {
     uint8_t state;
-    
     uint8_t active_channel;
     RGBcolor active_color;
 
+    channel_t *channel_map;
 }device_t;
 
 typedef enum {
