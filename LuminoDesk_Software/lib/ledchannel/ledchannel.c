@@ -1,10 +1,11 @@
 #include "ledchannel.h"
+#include <stdlib.h>
 
 channel_t channel0;
 channel_t channel1;
 channel_t channel2;
 
-channel_t channel_map[3];
+
 uint8_t enablechannelsignals[]={CH0_ENB_CHN,CH1_ENB_CHN,CH2_ENB_CHN};
 uint8_t voltagechannelsignals[]={CH0_CHG_VLT,CH1_CHG_VLT,CH2_CHG_VLT};
 uint8_t modeChannelsignals[]={CH0_CHG_MOD,CH1_CHG_MOD,CH2_CHG_MOD};
@@ -21,7 +22,7 @@ uint8_t (*gpio_map[6])[] = {
     &colorBChannelsignals
 };
 
-void initChannels(){
+void initChannels(channel_t *channel_map){
 
     // channel 0
     channel0.id=CHANNEL_0;
@@ -30,7 +31,7 @@ void initChannels(){
 
     channel0.mode_signal=CH0_CHG_MOD;
     channel0.voltage_signal=CH0_CHG_VLT;
-    //channel0.enable_signal=CH0_ENB_CHN;
+    channel0.enable_signal=CH0_ENB_CHN;
 
     channel0.color_r=0;
     channel0.color_b=0;
@@ -138,45 +139,54 @@ void changeModeChannel(uint8_t channel, uint8_t mode)
 
 
 //Enables or Diables the channel in Hardware
-void setEnableChannel(channel_t *channelmap)
+void setEnableChannel(channel_t *channelmap,uint8_t channel)
 { 
     uint8_t slice_n=0;
     
-    if((channelmap->enable)){
-        gpio_put(channelmap->enable_signal,1);
+
+    if((channelmap[channel].enable)){
+        gpio_put(channelmap[channel].enable_signal,1);
         }
-    if(!(channelmap->enable)){
-        gpio_put(channelmap->enable_signal,0);
+    if(!(channelmap[channel].enable)){
+        gpio_put(channelmap[channel].enable_signal,0);
         }
         return;
 }
 
 //Changes the RGB Values in the structure
 //Pass -1 to not change the color, maximum value is PWM_WRAP
-void updateRgbChannelData(channel_t **channelmap,uint8_t channel,int32_t color_r,int32_t color_b,int32_t color_g)
+void updateRgbChannelData(channel_t *channelmap,uint8_t channel,int32_t color_r,int32_t color_b,int32_t color_g)
 {
-    for(int i=0;i<3;i++){
-        if(channel_map[i].id==channel){
-            if(color_r!=-1){channel_map[i].color_r=(uint16_t)color_r;}
-            if(channel_map[i].color_r>PWM_WRAP){channel_map[i].color_r=PWM_WRAP;}
-            if(color_g!=-1){channel_map[i].color_g=(uint16_t)color_g;}
-            if(channel_map[i].color_g>PWM_WRAP){channel_map[i].color_g=PWM_WRAP;}
-            if(color_b!=-1){channel_map[i].color_b=(uint16_t)color_b;}
-            if(channel_map[i].color_b>PWM_WRAP){channel_map[i].color_b=PWM_WRAP;}
-        }
-    }
+    
+    if(color_r!=-1){channelmap[channel].color_r=(uint16_t)color_r;}
+    if(channelmap[channel].color_r>PWM_WRAP){channelmap[channel].color_r=PWM_WRAP;}
+    if(color_g!=-1){channelmap[channel].color_g=(uint16_t)color_g;}
+    if(channelmap[channel].color_g>PWM_WRAP){channelmap[channel].color_g=PWM_WRAP;}
+    if(color_b!=-1){channelmap[channel].color_b=(uint16_t)color_b;}
+    if(channelmap[channel].color_b>PWM_WRAP){channelmap[channel].color_b=PWM_WRAP;}
+
     return;
 }
 
-uint16_t getRgbChannelData(channel_t **channelmap,uint8_t channel,RGBcolor color){
+//Changes a Single RGB Value in the structure
+void updateSingleRGBChannelData(channel_t *channelmap,uint8_t channel,RGBcolor color,int32_t rgbvalue)
+{
+    if(color==red){updateRgbChannelData(channelmap,channel,rgbvalue,-1,-1);}
+    if(color==blue){updateRgbChannelData(channelmap,channel,-1,rgbvalue,-1);}
+    if(color==green){updateRgbChannelData(channelmap,channel,-1,-1,rgbvalue);}
+    return;
+}
+
+
+uint16_t getRgbChannelData(channel_t *channelmap,uint8_t channel,RGBcolor color){
 
     switch(color){
     case red:
-        return channelmap[channel]->color_r;
+        return channelmap[channel].color_r;
     case green:
-        return channelmap[channel]->color_g;
+        return channelmap[channel].color_g;
     case blue:
-        return channelmap[channel]->color_r;
+        return channelmap[channel].color_r;
     }
     return 0;
 }
@@ -190,23 +200,23 @@ void updateRgbStripeData(uint8_t channel)
 
 //Change the RGB Output dependend on the in the structure saved rgb values
 //For Constant Color only
-void changeRgbChannel(uint8_t channel)
+void changeRgbChannel(channel_t *channelmap,uint8_t channel)
 {
     for(int i=0;i<3;i++){
-        if(channel_map[i].id==channel){
-            uint slice_num = pwm_gpio_to_slice_num(channel_map[i].color_r_signal);
-            uint channel_num = pwm_gpio_to_channel(channel_map[i].color_r_signal);
-            pwm_set_chan_level(slice_num, channel_num, channel_map[i].color_r);
+        if(channelmap[i].id==channel){
+            uint slice_num = pwm_gpio_to_slice_num(channelmap[i].color_r_signal);
+            uint channel_num = pwm_gpio_to_channel(channelmap[i].color_r_signal);
+            pwm_set_chan_level(slice_num, channel_num, channelmap[i].color_r);
             pwm_set_enabled(slice_num, true);
 
-            slice_num = pwm_gpio_to_slice_num(channel_map[i].color_g_signal);
-            channel_num = pwm_gpio_to_channel(channel_map[i].color_g_signal);
-            pwm_set_chan_level(slice_num, channel_num, channel_map[i].color_g);
+            slice_num = pwm_gpio_to_slice_num(channelmap[i].color_g_signal);
+            channel_num = pwm_gpio_to_channel(channelmap[i].color_g_signal);
+            pwm_set_chan_level(slice_num, channel_num, channelmap[i].color_g);
             pwm_set_enabled(slice_num, true);
 
-            slice_num = pwm_gpio_to_slice_num(channel_map[i].color_b_signal);
-            channel_num = pwm_gpio_to_channel(channel_map[i].color_b_signal);
-            pwm_set_chan_level(slice_num, channel_num, channel_map[i].color_b);
+            slice_num = pwm_gpio_to_slice_num(channelmap[i].color_b_signal);
+            channel_num = pwm_gpio_to_channel(channelmap[i].color_b_signal);
+            pwm_set_chan_level(slice_num, channel_num, channelmap[i].color_b);
             pwm_set_enabled(slice_num, true);
         }
     }

@@ -2,6 +2,7 @@
 #define LEDCHANNELDEF_H
 
 #include "../hardwaredef/hardwaredef.h"
+#include <stdlib.h>
 
 //Number of channels
 #define NUMBER_OF_CHANNELS 3
@@ -38,21 +39,17 @@ typedef enum{
     blue,
 }RGBcolor;
 
-extern channel_t channel1;
-extern channel_t channel2;
-extern channel_t channel0;
-extern channel_t channel_map[3];
-
-
 // Function Prototypes
 void initChannels();
 void changeVoltageChannel(uint8_t channel, uint8_t voltage);
 void changeModeChannel(uint8_t channel, uint8_t mode);
-void setEnableChannel(channel_t *channelmap);
-void changeRgbChannel(uint8_t channel);
+void setEnableChannel(channel_t *channelmap,uint8_t channel);
+void changeRgbChannel(channel_t *channelmap,uint8_t channel);
 
-void updateRgbChannelData(channel_t **channelmap,uint8_t channel,int32_t color_r,int32_t color_b,int32_t color_g);
-uint16_t getRgbChannelData(channel_t **channelmap,uint8_t channel,RGBcolor color);
+void updateRgbChannelData(channel_t *channelmap,uint8_t channel,int32_t color_r,int32_t color_b,int32_t color_g);
+void updateSingleRGBChannelData(channel_t *channelmap,uint8_t channel,RGBcolor color,int32_t rgbvalue);
+uint16_t getRgbChannelData(channel_t *channelmap,uint8_t channel,RGBcolor color);
+
 
 void updateRgbStripeData(uint8_t channel);
 
