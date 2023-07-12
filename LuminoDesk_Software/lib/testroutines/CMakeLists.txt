@@ -1,5 +1,5 @@
 
-add_library(testroutines testroutines.c)
+add_library(testroutines testroutines.cpp)
 target_link_libraries(testroutines PUBLIC
         pico_stdlib
         hardware_gpio

@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 
 set(PICO_BOARD pico_w CACHE STRING "Board type")
@@ -22,15 +22,17 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(LuminoDesk_Software main.c )
+add_executable(LuminoDesk_Software main.cpp )
 add_subdirectory(lib/hardwaredef)
 include_directories(/lib/hardwaredef)
 add_subdirectory(lib/testroutines)
 include_directories(/lib/testroutines)
 add_subdirectory(lib/ledchannel)
 include_directories(/lib/ledchannel)
-add_subdirectory(lib/menu)
-include_directories(/lib/menu)
+add_subdirectory(lib/device)
+include_directories(/lib/device)
+add_subdirectory(lib/shiftregister)
+include_directories(/lib/shiftregister)
 
 pico_set_program_name(LuminoDesk_Software "LuminoDesk_Software")
 pico_set_program_version(LuminoDesk_Software "0.1")
@@ -60,7 +62,8 @@ target_link_libraries(LuminoDesk_Software
         hardwaredef
         testroutines
         ledchannel
-        menu
+        device
+        shiftregister
         )
 
 pico_add_extra_outputs(LuminoDesk_Software)
