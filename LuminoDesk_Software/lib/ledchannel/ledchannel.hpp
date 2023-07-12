@@ -1,7 +1,7 @@
 #ifndef LEDCHANNELDEF_H
 #define LEDCHANNELDEF_H
 
-#include "../hardwaredef/hardwaredef.h"
+#include "../hardwaredef/hardwaredef.hpp"
 #include <vector>
 
 enum class RGBColor {
@@ -12,6 +12,7 @@ enum class RGBColor {
 
 class Channel {
 public:
+    Channel();
     Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t modeSignal, uint8_t voltageSignal, uint8_t enableSignal, uint8_t colorRSignal, uint8_t colorGSignal, uint8_t colorBSignal);
 
 
@@ -21,18 +22,29 @@ public:
     //Set the Channel enable or Disable
     void setEnable(bool enable);
     void putEnable();
+    void toggleEnable();
+    bool getEnable();
+
 
     void setMode(uint8_t mode);
     void setVoltage(uint8_t voltage);
     void setModeSignal(uint8_t modeSignal);
     void setVoltageSignal(uint8_t voltageSignal);
 
+    uint8_t getId();
 
     //
     void setRGBChannelData(int32_t color_r, int32_t color_g, int32_t color_b);
     void setRGBChannelData(RGBColor color, int32_t value);
+    void setRGBChannelData(RGBColor color, int32_t value,int32_t dir);
     void setRGBChannelData(std::vector<int32_t>& color_r,std::vector<int32_t>& color_g,std::vector<int32_t>& color_b,std::vector<bool>& ledNumber);
-    void putRGBChannelData();
+    
+    void incRGBChannelData(RGBColor color, int32_t value);
+    
+    void putRGBChannelDataPWM();
+    void putRGBChannelDataPWM(RGBColor color);
+
+    uint32_t getRGBChannelData(RGBColor color);
 
 
 private:
@@ -61,4 +73,4 @@ private:
 
 };
 
-#endif LEDCHANNELDEF_H
+#endif 

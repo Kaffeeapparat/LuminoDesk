@@ -1,4 +1,4 @@
-add_library(hardwaredef hardwaredef.c)
+add_library(hardwaredef hardwaredef.cpp)
 target_link_libraries(hardwaredef PUBLIC
         pico_stdlib
         hardware_spi
