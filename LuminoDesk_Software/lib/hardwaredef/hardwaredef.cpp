@@ -231,6 +231,10 @@ bool rotaryencoder1_isr(struct repeating_timer *t){
         quad_map[0].timestampp2=currenttime;
     }
 */
+
+    irq_set_enabled(IO_IRQ_BANK0,0);
+    irq_set_enabled(TIMER_IRQ_0,0);
+    irq_set_enabled(TIMER_IRQ_1,0);
     int8_t neew,diff,last =0;
 
     if (gpio_get(quad_map[0].phase1)) neew=3;
@@ -243,6 +247,9 @@ bool rotaryencoder1_isr(struct repeating_timer *t){
         quad_map[0].laststatep2 = gpio_get(quad_map[0].phase2);
         tmpencoderval += (diff & 2)-1;
     }
+    irq_set_enabled(IO_IRQ_BANK0,1);
+    irq_set_enabled(TIMER_IRQ_0,1);
+    irq_set_enabled(TIMER_IRQ_1,1);
     return 1;
 
 }
