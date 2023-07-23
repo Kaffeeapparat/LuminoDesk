@@ -26,7 +26,6 @@ void checkButtonDebounceLock();
 
 
 
-
 int main() {
     stdio_init_all();
     std::cout << "Teststring, please!!!" << "\n";
@@ -38,7 +37,6 @@ int main() {
         return -1;
     }
     initGPIO();
-
     //Create a datastructure to control the device
     Device instance;
 
@@ -46,11 +44,13 @@ int main() {
     
     //Create a channel
     Channel channel0(0,MODE_ANALOG,5,CH0_CHG_MOD,CH0_CHG_VLT,5,CH0_LED_R,CH0_LED_G,CH0_LED_B);
-    channel0.initChannel();
-    Channel channel1(1,MODE_ANALOG,5,CH2_CHG_MOD,CH2_CHG_VLT,5,CH2_LED_R,CH2_LED_G,CH2_LED_B);
-    Channel channel2(2,MODE_ANALOG,5,CH2_CHG_MOD,CH2_CHG_VLT,5,CH2_LED_R,CH2_LED_G,CH2_LED_B);
+    Channel channel1(1,MODE_DIGITAL,5,CH0_CHG_MOD,CH0_CHG_VLT,6,13,11,12);
+    //Channel channel2(2,MODE_ANALOG,5,CH2_CHG_MOD,CH2_CHG_VLT,5,CH2_LED_R,CH2_LED_G,CH2_LED_B);
+    
+
 
     instance.addChannel(channel0);
+    instance.addChannel(channel1);
     
     
     //Create a Shiftregister
@@ -71,11 +71,12 @@ int main() {
     add_repeating_timer_ms(1, generateTick, NULL, &timer);
     //set alarm for sampling the rotary encoder
     static struct repeating_timer encoder1;
-    add_repeating_timer_us(1300, rotaryencoder1_isr, NULL, &encoder1);
+    add_repeating_timer_us(1500, rotaryencoder1_isr, NULL, &encoder1);
 
 
     while(1==1){
     checkButtonDebounceLock();
+
 
     if((tick==10)||(tick==60))
         {
@@ -84,7 +85,7 @@ int main() {
                 shiftregister0.toggleBit(SHIFTMASK_SMR1);
         }
          
-         instance.updateDeviceStateSignals(shiftregister0);
+        instance.updateDeviceStateSignals(shiftregister0);
         while((tick==10)||(tick==60))
         {
             tight_loop_contents();
@@ -178,7 +179,7 @@ int main() {
 
     if(0!=tmpencoderval)
     {
-    instance.getActiveChannel().incRGBChannelData(instance.getActiveColor(),tmpencoderval*45);
+    instance.getActiveChannel().putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
         printf("/n Rotary Encoder:%d",tmpencoderval);
     }
     tmpencoderval=0;

@@ -2,6 +2,7 @@
 #define LEDCHANNELDEF_H
 
 #include "../hardwaredef/hardwaredef.hpp"
+#include "generated/ws2812.pio.h"
 #include <vector>
 
 enum class RGBColor {
@@ -23,8 +24,6 @@ public:
     void setEnable(bool enable);
     void putEnable();
     void toggleEnable();
-    bool getEnable();
-
 
     void setMode(uint8_t mode);
     void setVoltage(uint8_t voltage);
@@ -32,6 +31,9 @@ public:
     void setVoltageSignal(uint8_t voltageSignal);
 
     uint8_t getId();
+    uint8_t getMode();
+    bool getEnable();
+    uint8_t getVoltage();
 
     //
     void setRGBChannelData(int32_t color_r, int32_t color_g, int32_t color_b);
@@ -39,12 +41,29 @@ public:
     void setRGBChannelData(RGBColor color, int32_t value,int32_t dir);
     void setRGBChannelData(std::vector<int32_t>& color_r,std::vector<int32_t>& color_g,std::vector<int32_t>& color_b,std::vector<bool>& ledNumber);
     
-    void incRGBChannelData(RGBColor color, int32_t value);
+    void putincRGBChannelData(RGBColor color, int32_t value);
     
-    void putRGBChannelDataPWM();
-    void putRGBChannelDataPWM(RGBColor color);
-
+    void putRGBChannelData();
+    void putRGBChannelData(RGBColor color);
+    
     uint32_t getRGBChannelData(RGBColor color);
+
+    //Digital Mode initialisation and usage methods
+
+    void initDigital();
+    void loadDigitalCore(uint8_t pio_select);
+    void unLoadDigitalCore();
+    bool isDigitalCoreloaded();
+    inline void putDigitalLED(uint32_t data);
+    inline void putDigitalLED(uint32_t data,uint16_t n);
+    inline uint32_t convertRGBtoWS2812B(uint8_t r, uint8_t g, uint8_t b);
+
+    uint32_t getNumberOfLeds();
+    void setNumberOfLeds(uint32_t led_number);
+
+    //Analog Mode initialiation Methods
+
+    void initPWM();
 
 
 private:
@@ -70,6 +89,17 @@ private:
 
     bool effect;
     void *effect_func;
+    
+
+    uint8_t position_digital_core;
+    PIO loaded_pio;
+    uint8_t loaded_pio_offset;
+    uint8_t loaded_pio_sm;
+    bool is_loaded;
+    bool is_rgbw;
+
+    void getFirstElementOfColorVector(RGBColor color);
+    uint32_t setFirstElementOfColorVector(RGBColor color);
 
 };
 

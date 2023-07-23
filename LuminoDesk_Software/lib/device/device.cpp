@@ -3,7 +3,7 @@
 Device::Device(): active_channel(), active_color(RGBColor::RED), active_state(),channels(),ch_fp_led_map(){}
 
 void Device::addChannel(Channel& channel)
-{
+{ 
     channels.push_back(channel);
 }
 

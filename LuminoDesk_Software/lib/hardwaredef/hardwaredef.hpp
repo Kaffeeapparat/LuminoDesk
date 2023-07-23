@@ -11,6 +11,8 @@
 #include "hardware/timer.h"
 #include "hardware/irq.h"
 #include "hardware/pwm.h"
+#include "hardware/pio.h"
+#include "hardware/clocks.h"
 
 #include "../testroutines/testroutines.hpp"
 
@@ -164,13 +166,17 @@ struct Button {
     ButtonAction shortpress;
 };
 
+
+
 extern Button button_map[2][5];
 extern Encoder encoder_map[1];
 extern ButtonAction lastinput;
 extern int8_t pressed_button_lock;
 void checkButtonDebounceLock();
 
-// PWM Constants
+// PWM maximal value
 constexpr uint16_t PWM_WRAP = 6250;
+//Digital maximal value
+constexpr uint16_t DIG_WRAP = 257;
 
 #endif

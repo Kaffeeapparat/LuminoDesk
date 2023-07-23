@@ -67,4 +67,3 @@ target_link_libraries(LuminoDesk_Software
         )
 
 pico_add_extra_outputs(LuminoDesk_Software)
-
