@@ -57,3 +57,4 @@ dkms.conf
 *build/
 #pico-sdk
 *pico-sdk/
+*.kate-swp
