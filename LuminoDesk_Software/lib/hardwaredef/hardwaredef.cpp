@@ -176,7 +176,7 @@ void checkButtonDebounceLock(){
 
 bool generateTick(struct repeating_timer *t)
 {
-    if(tick<100){
+    if(tick<=31){
         tick++;
     }
     else{

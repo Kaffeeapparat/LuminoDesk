@@ -18,6 +18,8 @@ extern int8_t pressed_button_lock;
 extern uint8_t tick;
 extern int32_t tmpencoderval;
 
+extern void signalNTimes(uint32_t time_us, int8_t pulses, uint8_t pin);
+
 bool generateTick(struct repeating_timer *t);
 bool rotaryencoder1_isr(struct repeating_timer *t);
 void printLastInput();
@@ -51,7 +53,7 @@ int main() {
 
     instance.addChannel(&channel0);
     instance.addChannel(&channel1);
-    
+
     
     //Create a Shiftregister
     Shiftregister shiftregister0(SHIFT_LATCH,SHIFT_CLK,SHIFT_DATA,10);
@@ -76,9 +78,9 @@ int main() {
 
     while(1==1){
     checkButtonDebounceLock();
+    
+    if((tick==10))
 
-
-    if((tick==10)||(tick==60))
         {
          if(!pressed_button_lock){
                 shiftregister0.toggleBit(SHIFTMASK_SMR0);
@@ -174,7 +176,7 @@ int main() {
             break;
     }
     }
-    if(tick==90)
+    if(tick==20)
     {
 
     if(0!=tmpencoderval)
