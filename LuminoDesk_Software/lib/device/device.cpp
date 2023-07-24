@@ -1,15 +1,15 @@
 #include "device.hpp"
 
-Device::Device(): active_channel(), active_color(RGBColor::RED), active_state(),channels(),ch_fp_led_map(){}
+Device::Device(): active_channel(), active_color(RGBColor::RED), active_state(){}
 
-void Device::addChannel(Channel& channel)
+void Device::addChannel(Channel* channel)
 { 
     channels.push_back(channel);
 }
 
 uint8_t Device::getActiveChannelId()
 {
-    return active_channel.getId();
+    return active_channel->getId();
 }
 
 uint8_t Device::getNumberofChannels()
@@ -20,14 +20,14 @@ uint8_t Device::getNumberofChannels()
 void Device::setActiveChannelId(uint8_t active_id) {
 
     auto it = std::find_if(channels.begin(), channels.end(),
-        [active_id](Channel& channel) { return channel.getId() == active_id; });
+        [active_id](Channel* channel) { return channel->getId() == active_id; });
 
     if (it != channels.end()) {
         active_channel = *it;
     }
 }
 
-Channel& Device::getActiveChannel()
+Channel* Device::getActiveChannel()
 {
     return this->active_channel;
 }
@@ -99,7 +99,7 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
             break;
     }
 
-    switch (this->active_channel.getId())
+    switch (this->active_channel->getId())
     {
         case 0:
             shift_register.unsetBit(LED_CH1);

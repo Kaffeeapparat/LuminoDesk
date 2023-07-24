@@ -5,6 +5,8 @@
 #include <vector>
 #include <iterator>
 #include <map>
+#include <functional>
+
 
 enum class DeviceState {
     INIT,
@@ -28,14 +30,14 @@ class Device {
 public:
     Device();
 
-    void addChannel(Channel& channel,uint8_t frontpanel_led);
-    void addChannel(Channel& channel);
-    void delChannel(Channel& channel);
+    void addChannel(Channel* channel,uint8_t frontpanel_led);
+    void addChannel(Channel* channel);
+    void delChannel(Channel* channel);
 
     uint8_t getNumberofChannels();
     uint8_t getActiveChannelId();
     void setActiveChannelId(uint8_t active_id);
-    Channel& getActiveChannel();
+    Channel* getActiveChannel();
     void toggleActiveChannel();
     void setShiftregister(Shiftregister& shift_register);
 
@@ -50,13 +52,8 @@ public:
 
 
 private:
-    
-    Channel active_channel;
+    Channel* active_channel;
     RGBColor active_color;
     DeviceState active_state;
-    std::vector<Channel> channels; 
-    std::map<Channel,uint8_t> ch_fp_led_map;
-
-
-
+    std::vector<Channel*> channels; 
 };

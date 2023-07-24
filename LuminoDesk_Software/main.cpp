@@ -49,8 +49,8 @@ int main() {
     
 
 
-    instance.addChannel(channel0);
-    instance.addChannel(channel1);
+    instance.addChannel(&channel0);
+    instance.addChannel(&channel1);
     
     
     //Create a Shiftregister
@@ -114,7 +114,7 @@ int main() {
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::channelonoff_short:
-            instance.getActiveChannel().toggleEnable();
+            instance.getActiveChannel()->toggleEnable();
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::speed_long:
@@ -179,7 +179,7 @@ int main() {
 
     if(0!=tmpencoderval)
     {
-    instance.getActiveChannel().putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
+    instance.getActiveChannel()->putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
         printf("/n Rotary Encoder:%d",tmpencoderval);
     }
     tmpencoderval=0;
