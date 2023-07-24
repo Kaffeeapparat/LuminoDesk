@@ -2,6 +2,7 @@
 
 #include "../ledchannel/ledchannel.hpp"
 #include "../shiftregister/shiftregister.hpp"
+#include "../effect/effect.hpp"
 #include <vector>
 #include <iterator>
 #include <map>

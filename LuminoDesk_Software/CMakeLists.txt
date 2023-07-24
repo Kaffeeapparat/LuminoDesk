@@ -33,6 +33,8 @@ add_subdirectory(lib/device)
 include_directories(/lib/device)
 add_subdirectory(lib/shiftregister)
 include_directories(/lib/shiftregister)
+add_subdirectory(lib/effect)
+include_directories(/lib/effect)
 
 pico_set_program_name(LuminoDesk_Software "LuminoDesk_Software")
 pico_set_program_version(LuminoDesk_Software "0.1")
@@ -64,6 +66,7 @@ target_link_libraries(LuminoDesk_Software
         ledchannel
         device
         shiftregister
+        effect
         )
 
 pico_add_extra_outputs(LuminoDesk_Software)

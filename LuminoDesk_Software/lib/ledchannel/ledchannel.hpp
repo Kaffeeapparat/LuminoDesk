@@ -5,12 +5,6 @@
 #include "generated/ws2812.pio.h"
 #include <vector>
 
-enum class RGBColor {
-    RED,
-    GREEN,
-    BLUE
-};
-
 class Channel {
 public:
     Channel();

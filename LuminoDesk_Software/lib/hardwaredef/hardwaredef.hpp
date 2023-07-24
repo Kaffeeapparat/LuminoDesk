@@ -146,6 +146,12 @@ enum class ButtonAction {
     dummy
 };
 
+enum class RGBColor {
+    RED,
+    GREEN,
+    BLUE
+};
+
 struct Encoder {
     int8_t phase1;
     int8_t phase2;
