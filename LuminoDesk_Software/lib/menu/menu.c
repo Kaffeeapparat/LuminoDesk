@@ -15,14 +15,26 @@ void updateActiveChannel(device_t* instance){
 void updateActiveColor(device_t* instance ){
 
         switch (instance->active_color) {
-        case red:
-            instance->active_color=green;
+        case RED:
+            instance->active_color=GREEN;
             break;
-        case green:
+        case GREEN:
             instance->active_color=blue;
             break;
-        case blue:
-            instance->active_color=red;
+        case BLUE:
+            instance->active_color=RED;
+            break;
+        case RED:
+            instance->active_color=VIOLET;
+            break;
+        case VIOLET:
+            instance->active_color=TURQUOISE;
+            break;
+        case TURQUOISE:
+            instance->active_color=WHITE;
+            break;
+        case WHITE:
+            instance->active_color=RED;
             break;
     }
 

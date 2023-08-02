@@ -1,10 +1,12 @@
+#pragma once
+
 #include "../ledchannel/ledchannel.h"
 
 typedef struct
 {
     uint8_t state;
     uint8_t active_channel;
-    RGBcolor active_color;
+    RGBColorSelect active_color;
 
     channel_t *channel_map;
 }device_t;

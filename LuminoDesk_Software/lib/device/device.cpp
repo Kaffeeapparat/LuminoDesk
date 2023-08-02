@@ -1,6 +1,6 @@
 #include "device.hpp"
 
-Device::Device(): active_channel(), active_color(RGBColor::RED), active_state(){}
+Device::Device(): active_channel(), active_color(RGBColorSelect::RED), active_state(){}
 
 void Device::addChannel(Channel* channel)
 { 
@@ -32,7 +32,7 @@ Channel* Device::getActiveChannel()
     return this->active_channel;
 }
 
-void Device::setActiveColor(RGBColor color)
+void Device::setActiveColor(RGBColorSelect color)
 {
     this->active_color=color;
 }
@@ -41,17 +41,26 @@ void Device::toggleActiveColor()
 {
     switch (this->active_color)
     {
-        case RGBColor::RED:
-            setActiveColor(RGBColor::GREEN);
+        case RGBColorSelect::RED:
+            setActiveColor(RGBColorSelect::GREEN);
             break;
-        case RGBColor::GREEN:
-            setActiveColor(RGBColor::BLUE);
+        case RGBColorSelect::GREEN:
+            setActiveColor(RGBColorSelect::BLUE);
             break;
-        case RGBColor::BLUE:
-            setActiveColor(RGBColor::RED);
+        case RGBColorSelect::BLUE:
+            setActiveColor(RGBColorSelect::VIOLET);
+            break;
+        case RGBColorSelect::VIOLET:
+            setActiveColor(RGBColorSelect::TURQUOISE);
+            break;
+        case RGBColorSelect::TURQUOISE:
+            setActiveColor(RGBColorSelect::WHITE);
+            break;
+        case RGBColorSelect::WHITE:
+            setActiveColor(RGBColorSelect::RED);
             break;
         default:
-            setActiveColor(RGBColor::RED);
+            setActiveColor(RGBColorSelect::RED);
             break;
     }
 }
@@ -69,7 +78,7 @@ void Device::toggleActiveChannel()
     }
 }       
 
-RGBColor Device::getActiveColor()
+RGBColorSelect Device::getActiveColor()
 {
     return this->active_color;
 }
@@ -77,19 +86,34 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
 {
     switch (this->active_color)
     {
-        case RGBColor::RED:
+        case RGBColorSelect::RED:
             shift_register.unsetBit(LED_B);
             shift_register.unsetBit(LED_G);
             shift_register.setBit(LED_R);
             break;
-        case RGBColor::GREEN:
+        case RGBColorSelect::GREEN:
             shift_register.unsetBit(LED_B);
             shift_register.unsetBit(LED_R);
             shift_register.setBit(LED_G);
             break;
-        case RGBColor::BLUE:
+        case RGBColorSelect::BLUE:
             shift_register.unsetBit(LED_R);
             shift_register.unsetBit(LED_G);
+            shift_register.setBit(LED_B);
+            break;
+        case RGBColorSelect::VIOLET:
+            shift_register.setBit(LED_R);
+            shift_register.unsetBit(LED_G);
+            shift_register.setBit(LED_B);
+            break;
+        case RGBColorSelect::TURQUOISE:
+            shift_register.unsetBit(LED_R);
+            shift_register.setBit(LED_G);
+            shift_register.setBit(LED_B);
+            break;
+        case RGBColorSelect::WHITE:
+            shift_register.setBit(LED_R);
+            shift_register.setBit(LED_G);
             shift_register.setBit(LED_B);
             break;
         default:

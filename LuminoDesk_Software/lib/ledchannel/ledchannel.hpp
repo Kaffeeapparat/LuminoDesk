@@ -1,5 +1,4 @@
-#ifndef LEDCHANNELDEF_H
-#define LEDCHANNELDEF_H
+#pragma once
 
 #include "../hardwaredef/hardwaredef.hpp"
 #include "generated/ws2812.pio.h"
@@ -31,16 +30,16 @@ public:
 
     //
     void setRGBChannelData(int32_t color_r, int32_t color_g, int32_t color_b);
-    void setRGBChannelData(RGBColor color, int32_t value);
-    void setRGBChannelData(RGBColor color, int32_t value,int32_t dir);
+    void setRGBChannelData(RGBColorSelect color, int32_t value);
+    void setRGBChannelData(RGBColorSelect color, int32_t value,int32_t dir);
     void setRGBChannelData(std::vector<int32_t>& color_r,std::vector<int32_t>& color_g,std::vector<int32_t>& color_b,std::vector<bool>& ledNumber);
     
-    void putincRGBChannelData(RGBColor color, int32_t value);
+    void putincRGBChannelData(RGBColorSelect color, int32_t value);
     
     void putRGBChannelData();
-    void putRGBChannelData(RGBColor color);
+    void putRGBChannelData(RGBColorSelect color);
     
-    uint32_t getRGBChannelData(RGBColor color);
+    uint32_t getRGBChannelData(RGBColorSelect color);
 
     //Digital Mode initialisation and usage methods
 
@@ -92,9 +91,7 @@ private:
     bool is_loaded;
     bool is_rgbw;
 
-    void getFirstElementOfColorVector(RGBColor color);
-    uint32_t setFirstElementOfColorVector(RGBColor color);
+    void getFirstElementOfColorVector(RGBColorSelect color);
+    uint32_t setFirstElementOfColorVector(RGBColorSelect color);
 
 };
-
-#endif 

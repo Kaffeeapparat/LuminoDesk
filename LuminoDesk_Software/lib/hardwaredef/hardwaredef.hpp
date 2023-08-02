@@ -1,8 +1,9 @@
-#ifndef HARDWAREDEF_H
-#define HARDWAREDEF_H
+#pragma once
 
 #include <cstdint>
 #include <ctime>
+#include <map>
+#include <vector>
 
 #include "pico/stdlib.h"
 #include "pico/stdio.h"
@@ -146,11 +147,19 @@ enum class ButtonAction {
     dummy
 };
 
-enum class RGBColor {
+enum class RGBColorSelect {
     RED,
     GREEN,
-    BLUE
+    BLUE,
+    VIOLET,
+    TURQUOISE,
+    WHITE
 };
+
+//Holds the selectable Colors on the frontpanel and combines them with an 
+//vector of the color compesition. Is done to build an iterator around
+//every color combination and set the colors in hardware. 
+extern std::map<RGBColorSelect,std::vector<RGBColorSelect>> rgb_color_weights;
 
 struct Encoder {
     int8_t phase1;
@@ -184,5 +193,3 @@ void checkButtonDebounceLock();
 constexpr uint16_t PWM_WRAP = 6250;
 //Digital maximal value
 constexpr uint16_t DIG_WRAP = 257;
-
-#endif

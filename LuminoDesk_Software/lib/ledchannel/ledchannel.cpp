@@ -91,19 +91,19 @@ void Channel::setRGBChannelData(int32_t colorR, int32_t colorG, int32_t colorB)
    this->color_b=colorB;
 }
 
-void Channel::setRGBChannelData(RGBColor color, int32_t value)
+void Channel::setRGBChannelData(RGBColorSelect color, int32_t value)
 {
     switch(color) 
     {
-        case RGBColor::RED:
+        case RGBColorSelect::RED:
             // Handle red color
             this->color_r=value;
             break;
-        case RGBColor::GREEN:
+        case RGBColorSelect::GREEN:
             // Handle green color
             this->color_g=value;
             break;
-        case RGBColor::BLUE:
+        case RGBColorSelect::BLUE:
             // Handle blue color
             this->color_b=value;
             break;
@@ -139,25 +139,27 @@ void Channel::putRGBChannelData()
             putDigitalLED(convertRGBtoWS2812B(this->color_r,this->color_g,this->color_b));
         }
 }
-void Channel::putRGBChannelData(RGBColor color)
+void Channel::putRGBChannelData(RGBColorSelect color)
 {
 
     if(getMode()==MODE_ANALOG)
     {
     switch(color) 
     {
-        case RGBColor::RED:
+        case RGBColorSelect::RED:
             // Handle red color
-        if(this->color_r!=-1){this->color_r=(uint16_t)color_r;}
-        if(this->color_r>PWM_WRAP){this->color_r=PWM_WRAP;}
-        case RGBColor::GREEN:
+            if(this->color_r!=-1){this->color_r=(uint16_t)color_r;}
+            if(this->color_r>PWM_WRAP){this->color_r=PWM_WRAP;}
+            break;
+        case RGBColorSelect::GREEN:
             // Handle green color
-        if(this->color_g!=-1){this->color_g=(uint16_t)color_g;}
-        if(this->color_g>PWM_WRAP){this->color_g=PWM_WRAP;}
-        case RGBColor::BLUE:
+            if(this->color_g!=-1){this->color_g=(uint16_t)color_g;}
+            if(this->color_g>PWM_WRAP){this->color_g=PWM_WRAP;}
+            break;
+        case RGBColorSelect::BLUE:
             // Handle blue color
-        if(this->color_b!=-1){this->color_b=(uint16_t)color_b;}
-        if(this->color_b>PWM_WRAP){this->color_b=PWM_WRAP;}
+            if(this->color_b!=-1){this->color_b=(uint16_t)color_b;}
+            if(this->color_b>PWM_WRAP){this->color_b=PWM_WRAP;}
             break;
         default:
             std::cout<<"Unknown color"<< std::endl;
@@ -167,8 +169,12 @@ void Channel::putRGBChannelData(RGBColor color)
 }
 
 
-void Channel::putincRGBChannelData(RGBColor color, int32_t value)
+void Channel::putincRGBChannelData(RGBColorSelect chosen_color, int32_t value)
 {
+    auto it=rgb_color_weights.find(chosen_color);
+
+    for(RGBColorSelect color : rgb_color_weights[it->first])
+    {
     if(getMode()==MODE_ANALOG)
     {
         value*=45;
@@ -191,46 +197,48 @@ void Channel::putincRGBChannelData(RGBColor color, int32_t value)
             setRGBChannelData(color,0);
         }
     }
-    else if(getMode()==MODE_DIGITAL)
-    {
-        value*=4;
-        if(value>=0)
+        else if(getMode()==MODE_DIGITAL)
         {
-            if((getRGBChannelData(color)+value)>(DIG_WRAP-2))
+            value*=4;
+            if(value>=0)
             {
-                setRGBChannelData(color,DIG_WRAP-2);
+                if((getRGBChannelData(color)+value)>(DIG_WRAP-2))
+                {
+                    setRGBChannelData(color,DIG_WRAP-2);
+                }
+                else
+                {
+                setRGBChannelData(color,getRGBChannelData(color)+value);
+                }
+            }
+            else if((((int32_t)getRGBChannelData(color))+value)>0)
+            {
+                setRGBChannelData(color,getRGBChannelData(color)+value);
             }
             else
             {
-            setRGBChannelData(color,getRGBChannelData(color)+value);
-            }
+                setRGBChannelData(color,0);
+            }    
+    
         }
-        else if((((int32_t)getRGBChannelData(color))+value)>0)
-        {
-            setRGBChannelData(color,getRGBChannelData(color)+value);
-        }
-        else
-        {
-            setRGBChannelData(color,0);
-        }    
+    
     }
-
     putRGBChannelData();
 }
 
 
 
-uint32_t Channel::getRGBChannelData(RGBColor color)
+uint32_t Channel::getRGBChannelData(RGBColorSelect color)
 {
     switch (color)
     {
-        case RGBColor::RED:
+        case RGBColorSelect::RED:
             return this->color_r;
             break;
-        case RGBColor::GREEN:
+        case RGBColorSelect::GREEN:
             return this->color_g;
             break;
-        case RGBColor::BLUE:
+        case RGBColorSelect::BLUE:
             return this->color_b;
             break;
         default:

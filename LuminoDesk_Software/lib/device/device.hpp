@@ -42,8 +42,8 @@ public:
     void toggleActiveChannel();
     void setShiftregister(Shiftregister& shift_register);
 
-    RGBColor getActiveColor();
-    void setActiveColor(RGBColor color);
+    RGBColorSelect getActiveColor();
+    void setActiveColor(RGBColorSelect color);
     void toggleActiveColor();
 
     DeviceState getActiveState();
@@ -54,7 +54,7 @@ public:
 
 private:
     Channel* active_channel;
-    RGBColor active_color;
+    RGBColorSelect active_color;
     DeviceState active_state;
     std::vector<Channel*> channels; 
 };

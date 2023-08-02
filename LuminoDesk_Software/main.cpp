@@ -57,7 +57,7 @@ int main() {
     
     //Create a Shiftregister
     Shiftregister shiftregister0(SHIFT_LATCH,SHIFT_CLK,SHIFT_DATA,10);
-    instance.setActiveColor(RGBColor::RED);
+    instance.setActiveColor(RGBColorSelect::RED);
     instance.setActiveChannelId(0); 
 
     //Initial SMC Toggle to set up the Switchmatrix
@@ -78,7 +78,7 @@ int main() {
 
     while(1==1){
     checkButtonDebounceLock();
-    
+
     if((tick==10))
 
         {

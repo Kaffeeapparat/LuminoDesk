@@ -31,6 +31,17 @@ Button button_map[2][5] = {
      {SMC5, SMCR2, 0, 0, ButtonAction::rgbs_long, ButtonAction::rgbs_short}}
 };
 
+std::map<RGBColorSelect,std::vector<RGBColorSelect>> rgb_color_weights=
+{
+    {RGBColorSelect::RED,{RGBColorSelect::RED}},
+    {RGBColorSelect::GREEN,{RGBColorSelect::GREEN}},
+    {RGBColorSelect::BLUE,{RGBColorSelect::BLUE}},
+    {RGBColorSelect::VIOLET,{RGBColorSelect::RED,RGBColorSelect::BLUE}},
+    {RGBColorSelect::TURQUOISE,{RGBColorSelect::GREEN,RGBColorSelect::BLUE}},
+    {RGBColorSelect::WHITE,{RGBColorSelect::RED,RGBColorSelect::GREEN,RGBColorSelect::BLUE}}
+};
+
+
 void turnOnSignal(uint8_t led)
 {
     shiftregisterbitmask|=(1<<led);
