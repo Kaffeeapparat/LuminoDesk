@@ -5,6 +5,7 @@ Channel::Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t mode_signal,
     : id(id), mode(mode), voltage(voltage), enable(enable), mode_signal(mode_signal), voltage_signal(voltage_signal), enable_signal(enable_signal), color_r(0), color_g(0), color_b(0), color_r_signal(color_r_signal), color_g_signal(color_g_signal), color_b_signal(color_b_signal), number_of_led(0)
     {
         this->is_loaded=false;
+        this->max_number_of_led=0;
         initChannel();}
 Channel::Channel(){}
 
@@ -136,7 +137,7 @@ void Channel::putRGBChannelData()
         }
         if(getMode()==MODE_DIGITAL)
         {
-            putDigitalLED(convertRGBtoWS2812B(this->color_r,this->color_g,this->color_b));
+            putDigitalLED(convertRGBtoWS2812B(this->color_r,this->color_g,this->color_b),this->number_of_led);
         }
 }
 void Channel::putRGBChannelData(RGBColorSelect color)
@@ -352,12 +353,23 @@ uint32_t Channel::convertRGBtoWS2812B(uint8_t r, uint8_t g, uint8_t b)
 
 void Channel::putDigitalLED(uint32_t data, uint16_t n)
 {
+    if(n>this->max_number_of_led)
+    {
+        this->max_number_of_led=n;
+    }
     irq_set_enabled(IO_IRQ_BANK0,0);
     irq_set_enabled(TIMER_IRQ_0,0);
     irq_set_enabled(TIMER_IRQ_1,0);
     for (uint16_t i=0;i<n;i++)
     {
         pio_sm_put_blocking(this->loaded_pio,this->loaded_pio_sm,(data)<<8u);
+    }
+    if(n<this->max_number_of_led)
+    {
+        for(uint16_t i=n;i<this->max_number_of_led;i++)
+        {
+            pio_sm_put_blocking(this->loaded_pio,this->loaded_pio_sm,(uint16_t)0);
+        }
     }
     irq_set_enabled(IO_IRQ_BANK0,1);
     irq_set_enabled(TIMER_IRQ_0,1);
@@ -384,7 +396,13 @@ bool Channel::isDigitalCoreloaded(){
 
 void Channel::setNumberOfLeds(uint32_t led_number)
 {
-    this->number_of_led=led_number;
+    if(((int32_t)this->number_of_led+(int32_t)led_number)<0)
+    {
+        this->number_of_led=0;
+    }
+    else{
+        this->number_of_led=led_number;
+    }
 }
 
 uint32_t Channel::getNumberOfLeds()

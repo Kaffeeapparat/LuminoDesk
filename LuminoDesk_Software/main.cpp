@@ -153,10 +153,19 @@ int main() {
             break;
         case ButtonAction::rotary_short:
             // Handle rotary_short action
+
+            if(instance.getActiveChannel()->getMode()==MODE_DIGITAL)
+            {
+                instance.setSideState(SideState::change_number_of_leds);
+            }
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::rotary_long:
             // Handle rotary_long action
+            if(instance.getActiveChannel()->getMode()==MODE_DIGITAL)
+            {
+                instance.setSideState(SideState::change_led_color_and_channel);
+            }
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::channels_long:
@@ -181,8 +190,16 @@ int main() {
 
     if(0!=tmpencoderval)
     {
-    instance.getActiveChannel()->putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
-        printf("/n Rotary Encoder:%d",tmpencoderval);
+        if(instance.getSideState()==SideState::change_number_of_leds)
+        {
+            instance.getActiveChannel()->setNumberOfLeds(instance.getActiveChannel()->getNumberOfLeds()+tmpencoderval);
+            instance.getActiveChannel()->putRGBChannelData();
+        }
+        else if(instance.getSideState()==SideState::change_led_color_and_channel)
+        {
+            instance.getActiveChannel()->putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
+            printf("/n Rotary Encoder:%d",tmpencoderval);
+        }
     }
     tmpencoderval=0;
     }
