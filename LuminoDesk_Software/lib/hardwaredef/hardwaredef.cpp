@@ -38,6 +38,7 @@ std::map<RGBColorSelect,std::vector<RGBColorSelect>> rgb_color_weights=
     {RGBColorSelect::BLUE,{RGBColorSelect::BLUE}},
     {RGBColorSelect::VIOLET,{RGBColorSelect::RED,RGBColorSelect::BLUE}},
     {RGBColorSelect::TURQUOISE,{RGBColorSelect::GREEN,RGBColorSelect::BLUE}},
+    {RGBColorSelect::YELLOW,{RGBColorSelect::GREEN,RGBColorSelect::RED}},
     {RGBColorSelect::WHITE,{RGBColorSelect::RED,RGBColorSelect::GREEN,RGBColorSelect::BLUE}}
 };
 
