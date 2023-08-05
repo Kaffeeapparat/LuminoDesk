@@ -1,6 +1,9 @@
 #include "device.hpp"
 
-Device::Device(): active_channel(), active_color(RGBColorSelect::RED), active_state(){}
+Device::Device(): active_channel(), active_color(RGBColorSelect::RED), active_state()
+    {
+        setSideState(SideState::change_led_color_and_channel);
+    }
 
 void Device::addChannel(Channel* channel)
 { 
@@ -146,6 +149,11 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
             shift_register.unsetBit(LED_CH2);
             break;
     }
+    if(this->active_side_state==SideState::change_number_of_leds){
+            shift_register.setBit(LED_CH1);
+            shift_register.setBit(LED_CH2);
+            shift_register.setBit(LED_CH0);
+    }
     
     switch (this->active_state)
     {
@@ -208,3 +216,24 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
     shift_register.transmit();
 
 }
+
+
+    DeviceState Device::getActiveState()
+    {
+        return this->active_state;
+    }
+
+    void Device::setActiveState(DeviceState state)
+    {
+        this->active_state=state;
+    }
+
+    void Device::setSideState(SideState state)
+    {
+        this->active_side_state=state;
+    }
+
+    SideState Device::getSideState()
+    {
+        return this->active_side_state;
+    }

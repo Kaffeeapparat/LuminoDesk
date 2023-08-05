@@ -21,9 +21,9 @@ enum class DeviceState {
 };
 
 enum class SideState {
-    waitforinput,
-    selectchannel,
-    rgbselselect,
+    change_led_color_and_channel, //Change channel and rgb selection
+    change_number_of_leds, //Change number of digital leds
+
 };
 
 
@@ -49,6 +49,9 @@ public:
     DeviceState getActiveState();
     void setActiveState(DeviceState state);
 
+    SideState getSideState();
+    void setSideState(SideState state);
+
     void updateDeviceStateSignals(Shiftregister& shift_register);
 
 
@@ -56,5 +59,6 @@ private:
     Channel* active_channel;
     RGBColorSelect active_color;
     DeviceState active_state;
+    SideState active_side_state;
     std::vector<Channel*> channels; 
 };
