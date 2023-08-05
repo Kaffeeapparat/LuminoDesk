@@ -10,15 +10,13 @@
 
 
 enum class DeviceState {
+    //The device is initialising itself
     INIT,
-    EFFECT,
-    CONSTANT,
-    EFFECT_MODE,
-    EFFECT_SPEED,
-    REMOTEISCONNECTED,
-    KEEPCONNECTION,
-    RECIEVEDCOMMANDO,
-};
+    //The device is open for user input and operates the channel
+    OPERATION,
+    //The device ignores user inputs except break connection and mainly operates on remote connections  
+    REMOTE,
+    };
 
 enum class SideState {
     change_led_color_and_channel, //Change channel and rgb selection
