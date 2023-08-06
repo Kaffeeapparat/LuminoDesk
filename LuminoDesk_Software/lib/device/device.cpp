@@ -6,9 +6,12 @@ Device::Device(): active_channel(), active_color(RGBColorSelect::RED), active_st
         this->active_state=DeviceState::INIT;
     }
 
-void Device::addChannel(Channel* channel)
+void Device::addChannel(Channel* channel,Effect* effect)
 { 
     channels.push_back(channel);
+    effect->setChannel(channel);
+    effectmap.insert({channel,effect});
+    
 }
 
 uint8_t Device::getActiveChannelId()

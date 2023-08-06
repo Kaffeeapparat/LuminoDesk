@@ -36,8 +36,8 @@ class Device {
 public:
     Device();
 
-    void addChannel(Channel* channel,uint8_t frontpanel_led);
-    void addChannel(Channel* channel);
+    void addChannel(Channel* channel,Effect* effect,uint8_t frontpanel_led);
+    void addChannel(Channel* channel,Effect* effect);
     void delChannel(Channel* channel);
 
     uint8_t getNumberofChannels();
@@ -66,4 +66,5 @@ private:
     DeviceState active_state;
     SideState active_side_state;
     std::vector<Channel*> channels; 
+    std::map<Channel*,Effect*>effectmap;
 };

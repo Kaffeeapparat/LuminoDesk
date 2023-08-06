@@ -80,15 +80,17 @@ int main() {
     while(1==1){
     checkButtonDebounceLock();
 
-    if(tick==0&&(instance.getActiveState()==DeviceState::OPERATION))
+
+    //Make sure that the device is always in the right state. Only done if device is not in remote
+    if(tick==0&&(instance.getActiveState()!=DeviceState::REMOTE))
     {
         if(instance.getActiveChannel()->getEffectEnable())
         {
-            instance.setActiveState(DeviceState::OPERATION_FX)
+            instance.setActiveState(DeviceState::OPERATION_FX);
         }
         else
         {
-            instance.setActiveState(DeviceState::OPERATION_CONST)
+            instance.setActiveState(DeviceState::OPERATION_CONST);
         }
     }
 
