@@ -3,6 +3,7 @@
 Device::Device(): active_channel(), active_color(RGBColorSelect::RED), active_state()
     {
         setSideState(SideState::change_led_color_and_channel);
+        this->active_state=DeviceState::INIT;
     }
 
 void Device::addChannel(Channel* channel)
@@ -165,43 +166,35 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
         shift_register.unsetBit(LED_SPEED);
         shift_register.unsetBit(LED_EMPTY);
         break;
-    case DeviceState::EFFECT:
+    case DeviceState::OPERATION_FX:
         shift_register.unsetBit(LED_CONST);
         shift_register.setBit(LED_FX);
         shift_register.unsetBit(LED_CHTOGGLE);
         shift_register.unsetBit(LED_REMOTE);
-        shift_register.unsetBit(LED_SPEED);
-        shift_register.unsetBit(LED_EMPTY);
+        if(this->active_side_state==SideState::change_speed_of_effect)
+        {
+            shift_register.setBit(LED_SPEED);
+        }
+        else
+        {
+            shift_register.unsetBit(LED_SPEED);
+        }
+        if(this->active_side_state==SideState::change_para1_of_effect)
+        {
+            shift_register.setBit(LED_EMPTY);
+        }
+        else
+        {
+            shift_register.unsetBit(LED_EMPTY);
+        }
         break;
-    case DeviceState::CONSTANT:
+    case DeviceState::OPERATION_CONST:
         shift_register.setBit(LED_CONST);
         shift_register.unsetBit(LED_FX);
         shift_register.unsetBit(LED_CHTOGGLE);
         shift_register.unsetBit(LED_REMOTE);
         shift_register.unsetBit(LED_SPEED);
         shift_register.unsetBit(LED_EMPTY);
-        break;
-    case DeviceState::EFFECT_MODE:
-        shift_register.unsetBit(LED_CONST);
-        shift_register.setBit(LED_FX);
-        shift_register.setBit(LED_CHTOGGLE);
-        shift_register.unsetBit(LED_REMOTE);
-        shift_register.unsetBit(LED_SPEED);
-        shift_register.unsetBit(LED_EMPTY);
-        break;
-    case DeviceState::EFFECT_SPEED:
-        shift_register.unsetBit(LED_CONST);
-        shift_register.setBit(LED_FX);
-        shift_register.unsetBit(LED_CHTOGGLE);
-        shift_register.unsetBit(LED_REMOTE);
-        shift_register.setBit(LED_SPEED);
-        shift_register.unsetBit(LED_EMPTY);
-        break;
-    case DeviceState::REMOTEISCONNECTED:
-        break;
-    case DeviceState::KEEPCONNECTION:
-        break;
-    case DeviceState::RECIEVEDCOMMANDO:
         break;
     default:
         shift_register.unsetBit(LED_CONST);

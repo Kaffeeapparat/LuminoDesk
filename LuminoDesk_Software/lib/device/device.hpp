@@ -14,6 +14,10 @@ enum class DeviceState {
     INIT,
     //The device is open for user input and operates the channel
     OPERATION,
+    //The device is operating in effect mode
+    OPERATION_FX,
+    //The device is operating in const mode
+    OPERATION_CONST,
     //The device ignores user inputs except break connection and mainly operates on remote connections  
     REMOTE,
     };
@@ -21,7 +25,10 @@ enum class DeviceState {
 enum class SideState {
     change_led_color_and_channel, //Change channel and rgb selection
     change_number_of_leds, //Change number of digital leds
-
+    change_speed_of_effect,
+    change_type_of_effect,
+    change_para1_of_effect,
+    change_color1_of_effect,
 };
 
 

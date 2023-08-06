@@ -76,8 +76,22 @@ int main() {
     add_repeating_timer_us(1500, rotaryencoder1_isr, NULL, &encoder1);
 
 
+    instance.setActiveState(DeviceState::OPERATION);
     while(1==1){
     checkButtonDebounceLock();
+
+    if(tick==0&&(instance.getActiveState()==DeviceState::OPERATION))
+    {
+        if(instance.getActiveChannel()->getEffectEnable())
+        {
+            instance.setActiveState(DeviceState::OPERATION_FX)
+        }
+        else
+        {
+            instance.setActiveState(DeviceState::OPERATION_CONST)
+        }
+    }
+
 
     if((tick==10))
 
