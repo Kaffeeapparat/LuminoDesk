@@ -265,7 +265,6 @@ int main() {
             if(instance.getSideState()==SideState::change_number_of_leds)
             {
                 instance.getActiveChannel()->setNumberOfLeds(instance.getActiveChannel()->getNumberOfLeds()+tmpencoderval);
-                instance.getActiveChannel()->putRGBChannelData();
             }
 
 

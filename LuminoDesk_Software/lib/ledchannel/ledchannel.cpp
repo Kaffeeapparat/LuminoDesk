@@ -451,6 +451,7 @@ void Channel::setNumberOfLeds(uint32_t led_number)
     else{
         this->number_of_led=led_number;
     }
+    setMaxNumbersOfLeds(led_number);
 }
 
 uint32_t Channel::getNumberOfLeds()
