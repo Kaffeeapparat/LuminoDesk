@@ -26,7 +26,7 @@ Button button_map[2][5] = {
      {SMC4, SMCR1, 0, 0, ButtonAction::remote_long, ButtonAction::remote_short}},
     {{SMC1, SMCR2, 0, 0, ButtonAction::effect_long, ButtonAction::effect_short},
      {SMC2, SMCR2, 0, 0, ButtonAction::empty_long, ButtonAction::empty_short},
-     {SMC3, SMCR2, 0, 0, ButtonAction::rotary_short, ButtonAction::rotary_long},
+     {SMC3, SMCR2, 0, 0, ButtonAction::rotary_long, ButtonAction::rotary_short},
      {SMC4, SMCR2, 0, 0, ButtonAction::channels_long, ButtonAction::channels_short},
      {SMC5, SMCR2, 0, 0, ButtonAction::rgbs_long, ButtonAction::rgbs_short}}
 };
