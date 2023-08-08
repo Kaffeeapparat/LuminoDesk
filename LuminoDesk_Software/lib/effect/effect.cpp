@@ -91,6 +91,32 @@
     {
         return this->active_effect;
     }
+    void Effect::toggleEffect()
+    {
+    switch(this->active_effect) {
+        case EffectList::DISCO:
+           this->active_effect=EffectList::RAMP;
+            break;
+        case EffectList::RAMP:
+           this->active_effect=EffectList::GLOW;
+            break;
+        case EffectList::GLOW:
+        //    this->active_effect=EffectList::GLOW_MULTI;
+        //     break;
+        //case EffectList::GLOW_MULTI:
+        //   this->active_effect=EffectList::BALL;
+        //    break;
+        // case EffectList::BALL:
+            this->active_effect=EffectList::SNAKE;
+             break;
+        case EffectList::SNAKE:
+            //Loopback
+           this->active_effect=EffectList::DISCO; 
+            break;
+        default:
+            break;
+    }
+    }
 
     void Effect::updateEffect()
     {

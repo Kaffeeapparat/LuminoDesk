@@ -33,11 +33,13 @@ public:
     void resetEffectColors();
 
     void setEffect(EffectList effect);
+    void toggleEffect();
     EffectList getEffect();
 
     void updateEffect();
 
     void setChannel(Channel* channel);
+
     
     
     //Outputs the LEDs. Analog effects return a Vector with one element

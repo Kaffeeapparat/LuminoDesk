@@ -135,14 +135,15 @@ int main() {
             break;
         case ButtonAction::constant_long:
             // Handle constant_long action
+            if(instance.getActiveChannel()->getEffectEnable())
+            {
+                instance.getActiveChannel()->setEffectEnable(false);
+                instance.setActiveState(DeviceState::OPERATION_CONST);
+            }
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::constant_short:
             // Handle constant_short action
-
-            instance.getActiveChannel()->setEffectEnable(false);
-            instance.setActiveState(DeviceState::OPERATION_CONST);
-
 
             lastinput = ButtonAction::dummy;
             break;
@@ -184,6 +185,10 @@ int main() {
             break;
         case ButtonAction::effect_short:
             // Handle effect_short action
+            if(instance.getActiveChannel()->getEffectEnable())
+            {
+                instance.getActiveEffect()->toggleEffect();
+            }
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::empty_long:
