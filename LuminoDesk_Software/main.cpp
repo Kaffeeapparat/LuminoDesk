@@ -177,7 +177,7 @@ int main() {
             {
             instance.getActiveChannel()->setEffectEnable(true);
             instance.setActiveState(DeviceState::OPERATION_FX);
-            instance.getActiveEffect()->setEffect(EffectList::SNAKE);
+            instance.getActiveEffect()->setEffect(EffectList::GLOW);
             instance.getActiveEffect()->setColor0(instance.getActiveChannel()->getRGBChannelData(0));
             }
             lastinput = ButtonAction::dummy;

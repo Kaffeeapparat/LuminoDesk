@@ -66,6 +66,7 @@ private:
     std::vector<RGBColor> calcRainbow();
     std::vector<RGBColor> calcSnake();
     std::vector<RGBColor> calcBall();
+    std::vector<RGBColor> calcRamp();
 
 
 };

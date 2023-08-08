@@ -4,6 +4,7 @@
 #include <ctime>
 #include <map>
 #include <vector>
+#include <cmath>
 
 #include "pico/stdlib.h"
 #include "pico/stdio.h"
@@ -196,6 +197,7 @@ enum class EffectList {
     RAINBOW,
     SNAKE,
     BALL,
+    RAMP
 };
 
 

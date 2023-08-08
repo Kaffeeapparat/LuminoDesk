@@ -3,6 +3,7 @@
     Effect::Effect( )
     {
         effect_function_list[EffectList::DISCO]=&Effect::calcDisco;
+        effect_function_list[EffectList::RAMP]=&Effect::calcRamp;
         effect_function_list[EffectList::GLOW]=&Effect::calcGlow;
         effect_function_list[EffectList::GLOW_MULTI]=&Effect::clacGlowMulti;
         effect_function_list[EffectList::BALL]=&Effect::calcBall;
@@ -101,7 +102,7 @@
         return (this->*effect_function_list[this->active_effect])();
     }
 
-    std::vector<RGBColor> Effect::calcGlow()
+    std::vector<RGBColor> Effect::calcRamp()
     {
         double timeratio=(double)this->current_time/(double)this->normal_time;
         RGBColor currentColor;
@@ -138,6 +139,43 @@
         return returnvector;
     }
 
+    std::vector<RGBColor> Effect::calcGlow()
+    {
+        double timeratio=((double)this->current_time)/(double)this->normal_time;
+        timeratio-=0.5;
+        RGBColor currentColor;
+        std::vector<RGBColor> returnvector;
+
+        returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
+     
+
+        currentColor.red=std::fabs(((double)this->effect_color[0].red)*timeratio*2);
+        currentColor.green=std::fabs(((double)this->effect_color[0].green)*timeratio*2);
+        currentColor.blue=std::fabs(((double)this->effect_color[0].blue)*timeratio*2);
+
+
+        RGBColor test1;
+        RGBColor test2;
+        RGBColor test3;
+
+        for(uint16_t led=0;led<this->attached_channel->getMaxNumberOfLeds();led++)
+        {
+            if(led<this->attached_channel->getNumberOfLeds())
+            {
+            returnvector[led]=currentColor;
+            }
+
+        }
+/*
+
+        returnvector.empty();
+        returnvector.push_back(test1);
+        returnvector.push_back(test2);
+        returnvector.push_back(test3);
+*/
+
+        return returnvector;
+    }
 
 
     std::vector<RGBColor> Effect::calcDisco()
@@ -248,6 +286,7 @@
 
 std::map<EffectList,bool> is_effect_analog=
 {
+    {EffectList::RAMP,1},
     {EffectList::DISCO,1},
     {EffectList::GLOW,1},
     {EffectList::GLOW_MULTI,0},
