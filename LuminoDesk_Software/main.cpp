@@ -39,6 +39,8 @@ int main() {
         gpio_put(1,1);
         return -1;
     }
+
+
     initGPIO();
     //Create a datastructure to control the device
     static Device instance;
@@ -175,7 +177,7 @@ int main() {
             {
             instance.getActiveChannel()->setEffectEnable(true);
             instance.setActiveState(DeviceState::OPERATION_FX);
-            instance.getActiveEffect()->setEffect(EffectList::GLOW);
+            instance.getActiveEffect()->setEffect(EffectList::DISCO);
             instance.getActiveEffect()->setColor0(instance.getActiveChannel()->getRGBChannelData(0));
             }
             lastinput = ButtonAction::dummy;

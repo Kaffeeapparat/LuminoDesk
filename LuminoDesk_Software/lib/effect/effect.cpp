@@ -142,7 +142,47 @@
 
     std::vector<RGBColor> Effect::calcDisco()
     {
-        std::vector<RGBColor> returnvector={{1,2,3}};
+        double timeratio=(double)this->current_time/(double)(this->normal_time);
+        RGBColor currentColor;
+        std::vector<RGBColor> returnvector;
+        std::srand(to_us_since_boot (get_absolute_time()));
+        returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
+        currentColor.red=255;
+        currentColor.green=255;
+        currentColor.blue=255;
+
+
+        for(uint16_t led=0;led<this->attached_channel->getMaxNumberOfLeds();led++)
+        {
+            if(220<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            {
+                while(currentColor.red > 254)
+                {
+                    currentColor.red=1+std::rand() / ((RAND_MAX + 1u) / 255);
+                }
+            }
+            if(220<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            {
+                while(currentColor.green > 254)
+                {
+                    currentColor.green=1+std::rand() / ((RAND_MAX + 1u) / 255);
+                }
+            }
+            if(220<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            {
+                while(currentColor.blue > 254)
+                {
+                    currentColor.blue=1+std::rand() / ((RAND_MAX + 1u) / 255);
+                }
+            }
+
+
+            if(led<this->attached_channel->getNumberOfLeds())
+            {
+            returnvector[led]=currentColor;
+            }
+
+        }
         return returnvector;
     }
     std::vector<RGBColor> Effect::clacGlowMulti()
