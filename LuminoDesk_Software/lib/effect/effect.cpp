@@ -195,11 +195,51 @@
         std::vector<RGBColor> returnvector={{1,2,3}};
         return returnvector;
         }
+
     std::vector<RGBColor> Effect::calcSnake()
-            {
-        std::vector<RGBColor> returnvector={{1,2,3}};
-        return returnvector;
+    {
+        double timeratio=(double)this->current_time/((double)this->normal_time);
+        double timeratio_min = 1.0/((double)this->normal_time);
+        
+        uint8_t snake_width=(double)this->attached_channel->getMaxNumberOfLeds()*(double)timeratio_min;
+        if(snake_width==0)
+        {
+            snake_width=1;
         }
+
+        RGBColor currentColor;
+        currentColor.red=50;
+
+        std::vector<RGBColor> returnvector;
+
+        returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
+
+    for(uint8_t n=0; timeratio_min*n<1;n++)
+    {
+        if(timeratio_min*n==timeratio)
+        {
+        for(uint16_t led=0;led<this->attached_channel->getMaxNumberOfLeds();led++)
+        {
+            if(led>n*snake_width && led<(n+2)*snake_width)
+            {
+                returnvector[led]=currentColor;
+            }
+            
+        }
+        }
+    }
+/*
+
+        returnvector.empty();
+        returnvector.push_back(test1);
+        returnvector.push_back(test2);
+        returnvector.push_back(test3);
+*/
+
+        return returnvector;
+    }
+    
+    
     std::vector<RGBColor> Effect::calcBall()
             {
         std::vector<RGBColor> returnvector={{1,2,3}};
