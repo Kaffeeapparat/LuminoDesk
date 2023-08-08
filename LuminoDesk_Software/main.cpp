@@ -201,26 +201,30 @@ int main() {
             break;
         case ButtonAction::rotary_short:
             // Handle rotary_short action
-
-            if(instance.getActiveChannel()->getMode()==MODE_DIGITAL)
+            
+            if(instance.getActiveChannel()->getMode()==MODE_DIGITAL&&(instance.getSideState()==SideState::change_led_color_and_channel))
             {
                 instance.setSideState(SideState::change_number_of_leds);
             }
+            else if(instance.getSideState()==SideState::change_number_of_leds)
+            {
+                instance.setSideState(SideState::change_led_color_and_channel);
+            }
+
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::rotary_long:
             // Handle rotary_long action
-            if(instance.getActiveChannel()->getMode()==MODE_DIGITAL)
-            {
-                instance.setSideState(SideState::change_led_color_and_channel);
-            }
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::channels_long:
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::channels_short:
-            instance.toggleActiveChannel();
+            if(instance.getSideState()==SideState::change_led_color_and_channel)
+            {
+                instance.toggleActiveChannel();
+            }
             // Handle channels_short action
             lastinput = ButtonAction::dummy;
             break;
@@ -258,6 +262,12 @@ int main() {
         if(instance.getActiveChannel()->getEffectEnable())
         //Handle the effect mode
         {
+            if(instance.getSideState()==SideState::change_number_of_leds)
+            {
+                instance.getActiveChannel()->setNumberOfLeds(instance.getActiveChannel()->getNumberOfLeds()+tmpencoderval);
+                instance.getActiveChannel()->putRGBChannelData();
+            }
+
 
         }
     tmpencoderval=0;
