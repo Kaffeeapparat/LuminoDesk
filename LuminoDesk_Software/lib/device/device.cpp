@@ -32,11 +32,26 @@ void Device::setActiveChannelId(uint8_t active_id) {
     if (it != channels.end()) {
         active_channel = *it;
     }
+
+    if(this->active_state!=DeviceState::REMOTE)
+    {
+        if(this->active_channel->getEffectEnable())
+            this->active_state=DeviceState::OPERATION_FX;
+    }
+    else
+    {
+        this->active_state=DeviceState::OPERATION_CONST;
+    }
 }
 
 Channel* Device::getActiveChannel()
 {
     return this->active_channel;
+}
+
+Effect* Device::getActiveEffect()
+{
+    return this->effectmap[this->active_channel];
 }
 
 void Device::setActiveColor(RGBColorSelect color)
@@ -82,6 +97,16 @@ void Device::toggleActiveChannel()
     else
     {
         setActiveChannelId(getActiveChannelId()+1);
+    }
+
+    if(this->active_state!=DeviceState::REMOTE)
+    {
+        if(this->active_channel->getEffectEnable())
+            this->active_state=DeviceState::OPERATION_FX;
+    }
+    else
+    {
+        this->active_state=DeviceState::OPERATION_CONST;
     }
 }       
 
@@ -232,4 +257,20 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
     SideState Device::getSideState()
     {
         return this->active_side_state;
+    }
+
+
+    void Device::updateAllEffects()
+    {
+        for(Channel * n : this->channels)
+        {
+        this->effectmap[n]->incCurentTimeByTick();
+        
+        if(n->getEffectEnable())
+        {
+            n->setRGBChannelData(this->effectmap[n]->getLEDs());
+            n->putDigitalLED();
+        }
+    
+        }
     }

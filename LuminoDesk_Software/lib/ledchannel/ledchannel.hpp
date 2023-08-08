@@ -28,18 +28,25 @@ public:
     bool getEnable();
     uint8_t getVoltage();
 
+    bool getEffectEnable();
+    void setEffectEnable(bool effect_on_off);
+    void toggleEffectEnable();
+
     //
     void setRGBChannelData(int32_t color_r, int32_t color_g, int32_t color_b);
     void setRGBChannelData(RGBColorSelect color, int32_t value);
     void setRGBChannelData(RGBColorSelect color, int32_t value,int32_t dir);
     void setRGBChannelData(std::vector<int32_t>& color_r,std::vector<int32_t>& color_g,std::vector<int32_t>& color_b,std::vector<bool>& ledNumber);
-    
+    void setRGBChannelData(std::vector<RGBColor>);
+
     void putincRGBChannelData(RGBColorSelect color, int32_t value);
     
     void putRGBChannelData();
     void putRGBChannelData(RGBColorSelect color);
-    
     uint32_t getRGBChannelData(RGBColorSelect color);
+    std::vector<RGBColor> getRGBChannelData();
+    RGBColor getRGBChannelData(uint32_t pos);
+
 
     //Digital Mode initialisation and usage methods
 
@@ -47,12 +54,16 @@ public:
     void loadDigitalCore(uint8_t pio_select);
     void unLoadDigitalCore();
     bool isDigitalCoreloaded();
+    void putDigitalLED();
     inline void putDigitalLED(uint32_t data);
     inline void putDigitalLED(uint32_t data,uint16_t n);
     inline uint32_t convertRGBtoWS2812B(uint8_t r, uint8_t g, uint8_t b);
 
     uint32_t getNumberOfLeds();
     void setNumberOfLeds(uint32_t led_number);
+    uint32_t getMaxNumberOfLeds();
+    void setMaxNumbersOfLeds(uint32_t led_number);
+
 
     //Analog Mode initialiation Methods
 
@@ -64,6 +75,7 @@ private:
     uint8_t mode;
     uint8_t voltage;
     bool enable;
+    bool effect_enable;
 
     uint8_t mode_signal;
     uint8_t voltage_signal;
@@ -73,16 +85,15 @@ private:
     uint32_t color_g;
     uint32_t color_b;
 
+    
+
     uint8_t color_r_signal;
     uint8_t color_g_signal;
     uint8_t color_b_signal;
 
     uint32_t number_of_led;
-    uint32_t *led_strip_data;
-
-    bool effect;
-    void *effect_func;
-    
+    uint32_t max_number_of_led;
+    std::vector<RGBColor> led_strip_data;
 
     uint8_t position_digital_core;
     PIO loaded_pio;

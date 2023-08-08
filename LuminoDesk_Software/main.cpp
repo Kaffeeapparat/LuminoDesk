@@ -9,6 +9,7 @@
 #include "lib/testroutines/testroutines.hpp"
 #include "lib/ledchannel/ledchannel.hpp"
 #include "lib/device/device.hpp"
+#include "lib/effect/effect.hpp"
 #include "lib/shiftregister/shiftregister.hpp"
 
 //extern char* button_map[2][5];
@@ -40,20 +41,21 @@ int main() {
     }
     initGPIO();
     //Create a datastructure to control the device
-    Device instance;
+    static Device instance;
 
-   
-    
+    static Effect effect0;
+    static Effect effect1;
+    static Effect effect2;
+
     //Create a channel
-    Channel channel0(0,MODE_ANALOG,5,CH0_CHG_MOD,CH0_CHG_VLT,5,CH0_LED_R,CH0_LED_G,CH0_LED_B);
-    Channel channel1(1,MODE_DIGITAL,5,CH0_CHG_MOD,CH0_CHG_VLT,6,13,11,12);
+    static Channel channel0(0,MODE_ANALOG,5,CH0_CHG_MOD,CH0_CHG_VLT,5,CH0_LED_R,CH0_LED_G,CH0_LED_B);
+    static Channel channel1(1,MODE_DIGITAL,5,CH0_CHG_MOD,CH0_CHG_VLT,6,13,11,12);
     //Channel channel2(2,MODE_ANALOG,5,CH2_CHG_MOD,CH2_CHG_VLT,5,CH2_LED_R,CH2_LED_G,CH2_LED_B);
     
 
 
-    instance.addChannel(&channel0);
-    instance.addChannel(&channel1);
-
+    instance.addChannel(&channel0,&effect0);
+    instance.addChannel(&channel1,&effect1);
     
     //Create a Shiftregister
     Shiftregister shiftregister0(SHIFT_LATCH,SHIFT_CLK,SHIFT_DATA,10);
@@ -63,6 +65,8 @@ int main() {
     //Initial SMC Toggle to set up the Switchmatrix
     shiftregister0.setShiftmask(shiftregisterbitmask);
     shiftregister0.setBit(SHIFTMASK_SMR0);
+
+
 
     //init the rotary encoder
     rotaryencoder1_init();
@@ -92,8 +96,16 @@ int main() {
         {
             instance.setActiveState(DeviceState::OPERATION_CONST);
         }
+    
+    
+    instance.updateAllEffects();
+    
+    while((tick==0))
+    {
+        tight_loop_contents();
     }
-
+    
+    }
 
     if((tick==10))
 
@@ -125,6 +137,11 @@ int main() {
             break;
         case ButtonAction::constant_short:
             // Handle constant_short action
+
+            instance.getActiveChannel()->setEffectEnable(false);
+            instance.setActiveState(DeviceState::OPERATION_CONST);
+
+
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::channelonoff_long:
@@ -153,6 +170,14 @@ int main() {
             break;
         case ButtonAction::effect_long:
             // Handle effect_long action
+
+            if(instance.getActiveState()==DeviceState::OPERATION||instance.getActiveState()==DeviceState::OPERATION_CONST)
+            {
+            instance.getActiveChannel()->setEffectEnable(true);
+            instance.setActiveState(DeviceState::OPERATION_FX);
+            instance.getActiveEffect()->setEffect(EffectList::GLOW);
+            instance.getActiveEffect()->setColor0(instance.getActiveChannel()->getRGBChannelData(0));
+            }
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::effect_short:
@@ -192,33 +217,46 @@ int main() {
             // Handle channels_short action
             lastinput = ButtonAction::dummy;
             break;
-        case ButtonAction::rgbs_long:
-            lastinput = ButtonAction::dummy;
-            break;
         case ButtonAction::rgbs_short:
             instance.toggleActiveColor();
             lastinput = ButtonAction::dummy;
             break;
     }
     }
+
+
     if(tick==20)
     {
+        //Decide wether the channel is in the constant or effect mode.
+        //Dependend on the mode the Inputs are procesed seperately-
+        if(!instance.getActiveChannel()->getEffectEnable())
+        //Handle the constant color mode!
+        {
+            if(0!=tmpencoderval)
+            {
+                if(instance.getSideState()==SideState::change_number_of_leds)
+                {
+                    instance.getActiveChannel()->setNumberOfLeds(instance.getActiveChannel()->getNumberOfLeds()+tmpencoderval);
+                    instance.getActiveChannel()->putRGBChannelData();
+                }
+                //If the Mode is Analog, chh
+                else if(instance.getSideState()==SideState::change_led_color_and_channel)
+                {
+                    if(instance.getActiveChannel())
+                    instance.getActiveChannel()->putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
+                    printf("/n Rotary Encoder:%d",tmpencoderval);
+                }
+            }
+        }
+        if(instance.getActiveChannel()->getEffectEnable())
+        //Handle the effect mode
+        {
 
-    if(0!=tmpencoderval)
-    {
-        if(instance.getSideState()==SideState::change_number_of_leds)
-        {
-            instance.getActiveChannel()->setNumberOfLeds(instance.getActiveChannel()->getNumberOfLeds()+tmpencoderval);
-            instance.getActiveChannel()->putRGBChannelData();
         }
-        else if(instance.getSideState()==SideState::change_led_color_and_channel)
-        {
-            instance.getActiveChannel()->putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
-            printf("/n Rotary Encoder:%d",tmpencoderval);
-        }
-    }
     tmpencoderval=0;
     }
+        
+    
     
 }
 

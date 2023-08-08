@@ -44,6 +44,7 @@ public:
     uint8_t getActiveChannelId();
     void setActiveChannelId(uint8_t active_id);
     Channel* getActiveChannel();
+    Effect* getActiveEffect();
     void toggleActiveChannel();
     void setShiftregister(Shiftregister& shift_register);
 
@@ -58,6 +59,8 @@ public:
     void setSideState(SideState state);
 
     void updateDeviceStateSignals(Shiftregister& shift_register);
+
+    void updateAllEffects();
 
 
 private:

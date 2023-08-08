@@ -14,6 +14,7 @@
 #include "hardware/pwm.h"
 #include "hardware/pio.h"
 #include "hardware/clocks.h"
+#include "hardware/divider.h"
 
 #include "../testroutines/testroutines.hpp"
 
@@ -152,8 +153,15 @@ enum class RGBColorSelect {
     GREEN,
     BLUE,
     VIOLET,
+    YELLOW,
     TURQUOISE,
     WHITE
+};
+
+struct RGBColor {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
 };
 
 //Holds the selectable Colors on the frontpanel and combines them with an 
@@ -179,6 +187,15 @@ struct Button {
     uint32_t debouncelock;
     ButtonAction longpress;
     ButtonAction shortpress;
+};
+
+enum class EffectList {
+    DISCO,
+    GLOW,
+    GLOW_MULTI,
+    RAINBOW,
+    SNAKE,
+    BALL,
 };
 
 

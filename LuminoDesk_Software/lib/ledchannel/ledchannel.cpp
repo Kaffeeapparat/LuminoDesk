@@ -5,7 +5,8 @@ Channel::Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t mode_signal,
     : id(id), mode(mode), voltage(voltage), enable(enable), mode_signal(mode_signal), voltage_signal(voltage_signal), enable_signal(enable_signal), color_r(0), color_g(0), color_b(0), color_r_signal(color_r_signal), color_g_signal(color_g_signal), color_b_signal(color_b_signal), number_of_led(0)
     {
         this->is_loaded=false;
-        this->max_number_of_led=0;
+        this->max_number_of_led=1;
+        this->number_of_led=1;
         initChannel();}
 Channel::Channel(){}
 
@@ -30,6 +31,19 @@ uint8_t Channel::getVoltage()
 uint8_t Channel::getId()
 {
     return this->id;
+}
+
+bool Channel::getEffectEnable()
+{
+    return this->effect_enable;
+}
+void Channel::setEffectEnable(bool effect_on_off)
+{
+    this->effect_enable=effect_on_off;
+}
+void Channel::toggleEffectEnable()
+{
+    this->effect_enable=!effect_enable;
 }
 
 
@@ -114,6 +128,20 @@ void Channel::setRGBChannelData(RGBColorSelect color, int32_t value)
     }
 }
 
+void Channel::setRGBChannelData(std::vector<RGBColor> led_vector)
+{
+    if(this->effect_enable)
+    {
+        this->led_strip_data=led_vector;
+    }
+    else
+    {
+        this->color_r=led_vector[0].red;
+        this->color_g=led_vector[0].green;
+        this->color_b=led_vector[0].blue;
+    }
+}
+
 
 void Channel::putRGBChannelData()
 {
@@ -140,6 +168,8 @@ void Channel::putRGBChannelData()
             putDigitalLED(convertRGBtoWS2812B(this->color_r,this->color_g,this->color_b),this->number_of_led);
         }
 }
+
+
 void Channel::putRGBChannelData(RGBColorSelect color)
 {
 
@@ -249,6 +279,16 @@ uint32_t Channel::getRGBChannelData(RGBColorSelect color)
     return 0;
 }
 
+std::vector<RGBColor> Channel::getRGBChannelData()
+{
+    return this->led_strip_data;
+}
+RGBColor Channel::getRGBChannelData(uint32_t pos)
+{
+    return this->led_strip_data[pos];
+}
+
+
 
 void Channel::initChannel()
 {
@@ -351,6 +391,14 @@ uint32_t Channel::convertRGBtoWS2812B(uint8_t r, uint8_t g, uint8_t b)
     return out;
 }
 
+void Channel::putDigitalLED()
+{
+    for(RGBColor c : this->led_strip_data)
+    {
+        putDigitalLED(convertRGBtoWS2812B(c.red,c.green,c.blue));
+    }
+}
+
 void Channel::putDigitalLED(uint32_t data, uint16_t n)
 {
     if(n>this->max_number_of_led)
@@ -407,5 +455,22 @@ void Channel::setNumberOfLeds(uint32_t led_number)
 
 uint32_t Channel::getNumberOfLeds()
 {
-    return number_of_led;
+    return this->number_of_led;
+}
+
+void Channel::setMaxNumbersOfLeds(uint32_t led_number)
+{
+    if(number_of_led<led_number)
+    {
+        this->number_of_led=number_of_led;
+    }
+    else
+    {
+    this->max_number_of_led=led_number;
+    }
+}
+
+uint32_t Channel::getMaxNumberOfLeds()
+{
+    return this->max_number_of_led;
 }
