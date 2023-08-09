@@ -79,12 +79,6 @@ private:
     uint8_t voltage_signal;
     uint8_t enable_signal;
 
-    uint32_t color_r;
-    uint32_t color_g;
-    uint32_t color_b;
-
-    
-
     uint8_t color_r_signal;
     uint8_t color_g_signal;
     uint8_t color_b_signal;

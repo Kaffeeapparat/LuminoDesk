@@ -211,5 +211,5 @@ void checkButtonDebounceLock();
 // PWM maximal value
 constexpr uint16_t PWM_WRAP = 6250;
 //Digital maximal value
-constexpr uint16_t DIG_WRAP = 257;
+constexpr uint16_t DIG_WRAP = 255;
 

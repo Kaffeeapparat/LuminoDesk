@@ -2,8 +2,9 @@
 #include <iostream>
 
 Channel::Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t mode_signal, uint8_t voltage_signal, uint8_t enable_signal, uint8_t color_r_signal, uint8_t color_g_signal, uint8_t color_b_signal)
-    : id(id), mode(mode), voltage(voltage), enable(enable), mode_signal(mode_signal), voltage_signal(voltage_signal), enable_signal(enable_signal), color_r(0), color_g(0), color_b(0), color_r_signal(color_r_signal), color_g_signal(color_g_signal), color_b_signal(color_b_signal), number_of_led(0)
+    : id(id), mode(mode), voltage(voltage), enable(enable), mode_signal(mode_signal), voltage_signal(voltage_signal), enable_signal(enable_signal),  color_r_signal(color_r_signal), color_g_signal(color_g_signal), color_b_signal(color_b_signal), number_of_led(0)
     {
+        this->led_strip_data.resize(1);
         this->is_loaded=false;
         this->max_number_of_led=1;
         this->number_of_led=1;
@@ -101,9 +102,9 @@ void Channel::putEnable()
 void Channel::setRGBChannelData(int32_t colorR, int32_t colorG, int32_t colorB)
 {
 
-   this->color_r=colorR;
-   this->color_g=colorG;
-   this->color_b=colorB;
+        this->led_strip_data[0].red=colorR;
+        this->led_strip_data[0].green=colorG;
+        this->led_strip_data[0].blue=colorB;
 }
 
 void Channel::setRGBChannelData(RGBColorSelect color, int32_t value)
@@ -112,15 +113,15 @@ void Channel::setRGBChannelData(RGBColorSelect color, int32_t value)
     {
         case RGBColorSelect::RED:
             // Handle red color
-            this->color_r=value;
+            this->led_strip_data[0].red=value;
             break;
         case RGBColorSelect::GREEN:
             // Handle green color
-            this->color_g=value;
+            this->led_strip_data[0].green=value;
             break;
         case RGBColorSelect::BLUE:
             // Handle blue color
-            this->color_b=value;
+            this->led_strip_data[0].blue=value;
             break;
         default:
             std::cout<<"Unknown color"<< std::endl;
@@ -136,9 +137,9 @@ void Channel::setRGBChannelData(std::vector<RGBColor> led_vector)
     }
     else
     {
-        this->color_r=led_vector[0].red;
-        this->color_g=led_vector[0].green;
-        this->color_b=led_vector[0].blue;
+        this->led_strip_data[0].red=led_vector[0].red;
+        this->led_strip_data[0].green=led_vector[0].green;
+        this->led_strip_data[0].blue=led_vector[0].blue;
     }
 }
 
@@ -150,22 +151,24 @@ void Channel::putRGBChannelData()
         {
             uint slice_num = pwm_gpio_to_slice_num(this->color_r_signal);
             uint channel_num = pwm_gpio_to_channel(this->color_r_signal);
-            pwm_set_chan_level(slice_num, channel_num, this->color_r);
+            pwm_set_chan_level(slice_num, channel_num, led_strip_data[0].red*((uint16_t)(PWM_WRAP/DIG_WRAP)));
             pwm_set_enabled(slice_num, true);
 
             slice_num = pwm_gpio_to_slice_num(this->color_g_signal);
             channel_num = pwm_gpio_to_channel(this->color_g_signal);
-            pwm_set_chan_level(slice_num, channel_num,this->color_g);
+            pwm_set_chan_level(slice_num, channel_num,led_strip_data[0].green*((uint16_t)(PWM_WRAP/DIG_WRAP)));
             pwm_set_enabled(slice_num, true);
 
             slice_num = pwm_gpio_to_slice_num(this->color_b_signal);
             channel_num = pwm_gpio_to_channel(this->color_b_signal);
-            pwm_set_chan_level(slice_num, channel_num, this->color_b);
+            pwm_set_chan_level(slice_num, channel_num, led_strip_data[0].blue*((uint16_t)(PWM_WRAP/DIG_WRAP)));
             pwm_set_enabled(slice_num, true);
         }
         if(getMode()==MODE_DIGITAL)
         {
-            putDigitalLED(convertRGBtoWS2812B(this->color_r,this->color_g,this->color_b),this->number_of_led);
+            putDigitalLED(convertRGBtoWS2812B(this->led_strip_data[0].red,
+                                            this->led_strip_data[0].green,
+                                            this->led_strip_data[0].blue),this->number_of_led);
         }
 }
 
@@ -177,12 +180,12 @@ void Channel::putincRGBChannelData(RGBColorSelect chosen_color, int32_t value)
     {
     if(getMode()==MODE_ANALOG)
     {
-        value*=45;
+        value*=4;
         if(value>=0)
         {
-            if((getRGBChannelData(color)+value)>(PWM_WRAP))
+            if((getRGBChannelData(color)+value)>(DIG_WRAP))
             {
-                setRGBChannelData(color,PWM_WRAP);
+                setRGBChannelData(color,DIG_WRAP);
             }
             else{
             setRGBChannelData(color,getRGBChannelData(color)+value);
@@ -202,9 +205,9 @@ void Channel::putincRGBChannelData(RGBColorSelect chosen_color, int32_t value)
             value*=4;
             if(value>=0)
             {
-                if((getRGBChannelData(color)+value)>(DIG_WRAP-2))
+                if((getRGBChannelData(color)+value)>(DIG_WRAP))
                 {
-                    setRGBChannelData(color,DIG_WRAP-2);
+                    setRGBChannelData(color,DIG_WRAP);
                 }
                 else
                 {
@@ -233,13 +236,13 @@ uint32_t Channel::getRGBChannelData(RGBColorSelect color)
     switch (color)
     {
         case RGBColorSelect::RED:
-            return this->color_r;
+            return this->led_strip_data[0].red;
             break;
         case RGBColorSelect::GREEN:
-            return this->color_g;
+            return this->led_strip_data[0].green;
             break;
         case RGBColorSelect::BLUE:
-            return this->color_b;
+            return this->led_strip_data[0].blue;
             break;
         default:
             return 0;
