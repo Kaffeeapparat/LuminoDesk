@@ -2,6 +2,10 @@
 
     Effect::Effect( )
     {
+        //Setup colorarray for non remote operation
+        this->effect_color.resize(2);
+
+        //Setup functionpointers
         effect_function_list[EffectList::DISCO]=&Effect::calcDisco;
         effect_function_list[EffectList::RAMP]=&Effect::calcRamp;
         effect_function_list[EffectList::GLOW]=&Effect::calcGlow;
