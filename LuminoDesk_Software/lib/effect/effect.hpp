@@ -20,8 +20,8 @@ public:
 
     void setParameter1(uint32_t param);
     uint32_t getParameter1();
-    void setParameter2(uint32_t param);
-    uint32_t getParameter2();
+    void setParameter0(uint32_t param);
+    uint32_t getParameter0();
 
     void setColor1(RGBColor color);
     RGBColor getColor1();
@@ -58,7 +58,7 @@ private:
     uint32_t current_time=0;
     
     uint32_t parameter1=1;
-    uint32_t parameter2=1;
+    uint32_t parameter0=1;
 
     std::map<EffectList,std::vector<RGBColor>  (Effect::*)()> effect_function_list;
 

@@ -27,6 +27,7 @@ enum class SideState {
     change_number_of_leds, //Change number of digital leds
     change_speed_of_effect,
     change_type_of_effect,
+    change_para0_of_effect,
     change_para1_of_effect,
     change_color1_of_effect,
 };

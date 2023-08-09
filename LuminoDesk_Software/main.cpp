@@ -156,10 +156,43 @@ int main() {
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::speed_long:
-            // Handle speed_long action
+            if(instance.getActiveChannel()->getMode()==MODE_DIGITAL)
+                {
+                    instance.setSideState(SideState::change_speed_of_effect);
+                }
+            else if(instance.getSideState()==SideState::change_speed_of_effect
+                    ||instance.getSideState()==SideState::change_para0_of_effect
+                    ||instance.getSideState()==SideState::change_para1_of_effect
+                    ||instance.getSideState()==SideState::change_color1_of_effect)
+                {
+                        instance.setSideState(SideState::change_led_color_and_channel);
+                }
             lastinput = ButtonAction::dummy;
             break;
-        case ButtonAction::speed_short:
+        case ButtonAction::speed_short:  
+
+            if(instance.getSideState()==SideState::change_speed_of_effect
+                    ||instance.getSideState()==SideState::change_para0_of_effect
+                    ||instance.getSideState()==SideState::change_para1_of_effect
+                    ||instance.getSideState()==SideState::change_color1_of_effect)
+            {
+            switch(instance.getSideState()){
+            case SideState::change_speed_of_effect:
+                instance.setSideState(SideState::change_para0_of_effect);
+                break;
+            case SideState::change_para0_of_effect:
+                instance.setSideState(SideState::change_para1_of_effect);
+                break;
+            case SideState::change_para1_of_effect:
+                instance.setSideState(SideState::change_color1_of_effect);
+                break;
+            case SideState::change_color1_of_effect:
+                instance.setSideState(SideState::change_speed_of_effect);
+                break;
+            default:
+            break;
+            }
+            }
             // Handle speed_short action
             lastinput = ButtonAction::dummy;
             break;
@@ -262,12 +295,26 @@ int main() {
         if(instance.getActiveChannel()->getEffectEnable())
         //Handle the effect mode
         {
-            if(instance.getSideState()==SideState::change_number_of_leds)
+            if(tmpencoderval!=0)
             {
+            switch(instance.getSideState())
+            {
+            case SideState::change_number_of_leds:
                 instance.getActiveChannel()->setNumberOfLeds(instance.getActiveChannel()->getNumberOfLeds()+tmpencoderval);
+                break;
+            case SideState::change_speed_of_effect:
+                instance.getActiveEffect()->setNormTime(instance.getActiveEffect()->getNormTime()+tmpencoderval);
+                break;
+            case SideState::change_para0_of_effect:
+                instance.getActiveEffect()->setParameter1(instance.getActiveEffect()->getParameter1()+tmpencoderval);
+                break;
+            case SideState::change_para1_of_effect:
+                instance.getActiveEffect()->setParameter0(instance.getActiveEffect()->getParameter0()+tmpencoderval);
+                break;
+            default:
+            break;
             }
-
-
+            }
         }
     tmpencoderval=0;
     }

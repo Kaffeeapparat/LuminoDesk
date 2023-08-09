@@ -57,13 +57,13 @@
         return this->parameter1;
     }
 
-    void Effect::setParameter2(uint32_t param)
+    void Effect::setParameter0(uint32_t param)
     {
-        this->parameter2=param;
+        this->parameter0=param;
     }
-    uint32_t Effect::getParameter2()
+    uint32_t Effect::getParameter0()
     {
-        return parameter2;
+        return parameter0;
     }
 
     void Effect::setColor0(RGBColor color) 
