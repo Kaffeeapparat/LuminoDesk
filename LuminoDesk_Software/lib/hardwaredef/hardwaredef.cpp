@@ -68,8 +68,8 @@ int8_t pressed_button_lock=0;
 uint32_t pressed_button_time;
 Button pressed_button;
 
-const uint32_t debounce_threshold=50;
-const uint32_t longpress_threshold=2000;
+const uint32_t debounce_threshold=20;
+const uint32_t longpress_threshold=750;
 const uint32_t failure_threshold=10000;
 const uint32_t debouncelock_threshold=400;
 
