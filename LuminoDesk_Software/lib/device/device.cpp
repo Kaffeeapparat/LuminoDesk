@@ -4,6 +4,7 @@ Device::Device(): active_channel(), active_color(RGBColorSelect::RED), active_st
     {
         setSideState(SideState::change_led_color_and_channel);
         this->active_state=DeviceState::INIT;
+        this->is_on=true;
     }
 
 void Device::addChannel(Channel* channel,Effect* effect)
@@ -11,6 +12,8 @@ void Device::addChannel(Channel* channel,Effect* effect)
     channels.push_back(channel);
     effect->setChannel(channel);
     effectmap.insert({channel,effect});
+    onoff_memory.clear();
+    onoff_memory.resize(getNumberofChannels());
     
 }
 
@@ -42,6 +45,17 @@ void Device::setActiveChannelId(uint8_t active_id) {
     {
         this->active_state=DeviceState::OPERATION_CONST;
     }
+}
+
+Channel * Device::getActiveChannelByID(uint8_t active_id) {
+
+    auto it = std::find_if(channels.begin(), channels.end(),
+        [active_id](Channel* channel) { return channel->getId() == active_id; });
+
+    if (it != channels.end()) {
+        return active_channel = *it;
+    }
+    return nullptr;
 }
 
 Channel* Device::getActiveChannel()
@@ -272,5 +286,35 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
             n->putDigitalLED();
         }
     
+        }
+    }
+
+    void Device::turnOn()
+    {
+        if(!this->is_on)
+        {
+        for(int n=0;n<this->getNumberofChannels();n++)
+        {
+            channels[n]->setEnable(this->onoff_memory[n]);
+        }
+
+        this->is_on=true;
+        }
+    }
+
+    void Device::turnOff()
+    {
+        if(this->is_on)
+        {
+        for(int n=0;n<this->getNumberofChannels();n++)
+        {
+            if(getActiveChannelByID(n)==nullptr)
+            {
+                break;
+            }
+            this->onoff_memory[n]=getActiveChannelByID(n)->getEnable();
+            getActiveChannelByID(n)->setEnable(false);
+        }
+        this->is_on=false;
         }
     }

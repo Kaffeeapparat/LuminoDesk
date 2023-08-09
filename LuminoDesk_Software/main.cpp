@@ -81,8 +81,12 @@ int main() {
     static struct repeating_timer encoder1;
     add_repeating_timer_us(1500, rotaryencoder1_isr, NULL, &encoder1);
 
+    //Set lastinput to a defined state
+    lastinput=ButtonAction::dummy;
 
+    //Set the Active state to a defined state
     instance.setActiveState(DeviceState::OPERATION);
+
     while(1==1){
     checkButtonDebounceLock();
 
@@ -127,10 +131,12 @@ int main() {
         {
         case ButtonAction::onoff_long:
             // Handle onoff_long action
+            instance.turnOff();
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::onoff_short:
             // Handle onoff_short action
+            instance.turnOn();
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::constant_long:

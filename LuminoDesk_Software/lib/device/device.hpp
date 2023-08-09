@@ -44,6 +44,7 @@ public:
     uint8_t getNumberofChannels();
     uint8_t getActiveChannelId();
     void setActiveChannelId(uint8_t active_id);
+    Channel* getActiveChannelByID(uint8_t active_id);
     Channel* getActiveChannel();
     Effect* getActiveEffect();
     void toggleActiveChannel();
@@ -63,6 +64,11 @@ public:
 
     void updateAllEffects();
 
+    //Methods to handle the on/off function
+
+    void turnOn();
+    void turnOff();
+
 
 private:
     Channel* active_channel;
@@ -71,4 +77,8 @@ private:
     SideState active_side_state;
     std::vector<Channel*> channels; 
     std::map<Channel*,Effect*>effectmap;
+    
+    //Saves the state of the channels so during an on/off cycle the device remebers which channels to turn on
+    std::vector<bool> onoff_memory;
+    bool is_on;
 };
