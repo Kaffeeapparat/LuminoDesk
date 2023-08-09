@@ -40,9 +40,8 @@ public:
     void setRGBChannelData(std::vector<RGBColor>);
 
     void putincRGBChannelData(RGBColorSelect color, int32_t value);
-    
     void putRGBChannelData();
-    void putRGBChannelData(RGBColorSelect color);
+
     uint32_t getRGBChannelData(RGBColorSelect color);
     std::vector<RGBColor> getRGBChannelData();
     RGBColor getRGBChannelData(uint32_t pos);

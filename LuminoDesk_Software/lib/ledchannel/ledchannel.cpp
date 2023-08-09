@@ -169,37 +169,6 @@ void Channel::putRGBChannelData()
         }
 }
 
-
-void Channel::putRGBChannelData(RGBColorSelect color)
-{
-
-    if(getMode()==MODE_ANALOG)
-    {
-    switch(color) 
-    {
-        case RGBColorSelect::RED:
-            // Handle red color
-            if(this->color_r!=-1){this->color_r=(uint16_t)color_r;}
-            if(this->color_r>PWM_WRAP){this->color_r=PWM_WRAP;}
-            break;
-        case RGBColorSelect::GREEN:
-            // Handle green color
-            if(this->color_g!=-1){this->color_g=(uint16_t)color_g;}
-            if(this->color_g>PWM_WRAP){this->color_g=PWM_WRAP;}
-            break;
-        case RGBColorSelect::BLUE:
-            // Handle blue color
-            if(this->color_b!=-1){this->color_b=(uint16_t)color_b;}
-            if(this->color_b>PWM_WRAP){this->color_b=PWM_WRAP;}
-            break;
-        default:
-            std::cout<<"Unknown color"<< std::endl;
-            break;
-    }
-    }
-}
-
-
 void Channel::putincRGBChannelData(RGBColorSelect chosen_color, int32_t value)
 {
     auto it=rgb_color_weights.find(chosen_color);
