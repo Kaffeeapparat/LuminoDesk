@@ -235,26 +235,27 @@
         currentColor.green=255;
         currentColor.blue=255;
 
-
+        if(timeratio==1)
+        {
         for(uint16_t led=0;led<this->attached_channel->getMaxNumberOfLeds();led++)
         {
-            if(220<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            if(parameter1<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
             {
-                while(currentColor.red > 254)
+                while(currentColor.red > parameter0)
                 {
                     currentColor.red=1+std::rand() / ((RAND_MAX + 1u) / 255);
                 }
             }
-            if(220<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            if(parameter1<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
             {
-                while(currentColor.green > 254)
+                while(currentColor.green > parameter0)
                 {
                     currentColor.green=1+std::rand() / ((RAND_MAX + 1u) / 255);
                 }
             }
-            if(220<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            if(parameter1<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
             {
-                while(currentColor.blue > 254)
+                while(currentColor.blue > parameter0)
                 {
                     currentColor.blue=1+std::rand() / ((RAND_MAX + 1u) / 255);
                 }
@@ -266,6 +267,11 @@
             returnvector[led]=currentColor;
             }
 
+        }
+        }
+        else
+        {
+            return this->attached_channel->getRGBChannelData();
         }
         return returnvector;
     }
