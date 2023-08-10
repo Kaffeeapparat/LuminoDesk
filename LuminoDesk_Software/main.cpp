@@ -29,6 +29,7 @@ void checkButtonDebounceLock();
 
 
 
+
 int main() {
     stdio_init_all();
     std::cout << "Teststring, please!!!" << "\n";
@@ -84,7 +85,7 @@ int main() {
     //Set lastinput to a defined state
     lastinput=ButtonAction::dummy;
 
-    //Set the Active state to a defined state
+    //Set the Active state to a defined
     instance.setActiveState(DeviceState::OPERATION);
 
     while(1==1){
@@ -311,10 +312,10 @@ int main() {
             case SideState::change_speed_of_effect:
                 instance.getActiveEffect()->setNormTime(instance.getActiveEffect()->getNormTime()+tmpencoderval);
                 break;
-            case SideState::change_para0_of_effect:
+            case SideState::change_para1_of_effect:
                 instance.getActiveEffect()->setParameter1(instance.getActiveEffect()->getParameter1()+tmpencoderval);
                 break;
-            case SideState::change_para1_of_effect:
+            case SideState::change_para0_of_effect:
                 instance.getActiveEffect()->setParameter0(instance.getActiveEffect()->getParameter0()+tmpencoderval);
                 break;
             default:
