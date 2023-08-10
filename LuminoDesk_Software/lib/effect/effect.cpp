@@ -46,7 +46,7 @@
     {
         this->current_time++;
 
-        if(this->current_time>=this->normal_time)
+        if(this->current_time>this->normal_time)
         {
             this->current_time=0;
         }
@@ -134,17 +134,33 @@
 
     std::vector<RGBColor> Effect::calcRamp()
     {
-        double timeratio=(double)this->current_time/(double)this->normal_time;
+        double timerratio=(((double)((this->current_time-(this->parameter0+this->parameter1))))/((double)this->normal_time-(this->parameter0+this->parameter1)));
+        
+        if(timerratio<0||timerratio>1)
+        {
+            timerratio=0;
+        }
         RGBColor currentColor;
         std::vector<RGBColor> returnvector;
 
         returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
      
+        currentColor.red=this->effect_color[0].red*timerratio;
+        currentColor.green=this->effect_color[0].green*timerratio;
+        currentColor.blue=this->effect_color[0].blue*timerratio;
 
-        currentColor.red=this->effect_color[0].red*timeratio;
-        currentColor.green=this->effect_color[0].green*timeratio;
-        currentColor.blue=this->effect_color[0].blue*timeratio;
-        
+        if(this->current_time<this->parameter0)
+        {
+        currentColor.red=0;
+        currentColor.green=0;
+        currentColor.blue=0;
+        }
+        if(this->current_time+this->parameter0>(this->normal_time-this->parameter1))
+        {
+        currentColor.red=this->effect_color[0].red;
+        currentColor.green=this->effect_color[0].green;
+        currentColor.blue=this->effect_color[0].blue;
+        }
 
         RGBColor test1;
         RGBColor test2;
