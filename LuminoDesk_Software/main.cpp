@@ -93,7 +93,7 @@ int main() {
 
 
     //Make sure that the device is always in the right state. Only done if device is not in remote
-    if(tick==0&&(instance.getActiveState()!=DeviceState::REMOTE))
+    if(tick==0&&(instance.getActiveState()!=DeviceState::REMOTE)&&(instance.getActiveState()!=DeviceState::OFF))
     {
         if(instance.getActiveChannel()->getEffectEnable())
         {
@@ -106,7 +106,6 @@ int main() {
     
     
     instance.updateAllEffects();
-    
     while((tick==0))
     {
         tight_loop_contents();
@@ -146,6 +145,7 @@ int main() {
             {
                 instance.getActiveChannel()->setEffectEnable(false);
                 instance.setActiveState(DeviceState::OPERATION_CONST);
+                instance.setSideState(SideState::change_led_color_and_channel);
             }
             lastinput = ButtonAction::dummy;
             break;
@@ -163,17 +163,18 @@ int main() {
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::speed_long:
-            if(instance.getActiveChannel()->getMode()==MODE_DIGITAL)
-                {
-                    instance.setSideState(SideState::change_speed_of_effect);
-                }
-            else if(instance.getSideState()==SideState::change_speed_of_effect
+
+            if(instance.getSideState()==SideState::change_speed_of_effect
                     ||instance.getSideState()==SideState::change_para0_of_effect
                     ||instance.getSideState()==SideState::change_para1_of_effect
                     ||instance.getSideState()==SideState::change_color1_of_effect)
                 {
                         instance.setSideState(SideState::change_led_color_and_channel);
                 }
+            else if(instance.getActiveChannel()->getMode()==MODE_DIGITAL)
+                {
+                    instance.setSideState(SideState::change_speed_of_effect);
+                }                
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::speed_short:  
@@ -276,7 +277,7 @@ int main() {
     }
 
 
-    if(tick==20)
+    if(tick==20&&(instance.getActiveState()!=DeviceState::OFF))
     {
         //Decide wether the channel is in the constant or effect mode.
         //Dependend on the mode the Inputs are procesed seperately-

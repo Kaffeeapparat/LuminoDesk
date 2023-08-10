@@ -192,10 +192,37 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
             shift_register.unsetBit(LED_CH2);
             break;
     }
-    if(this->active_side_state==SideState::change_number_of_leds){
+    
+    
+    if(this->active_side_state==SideState::change_number_of_leds)
+    {
             shift_register.setBit(LED_CH1);
             shift_register.setBit(LED_CH2);
             shift_register.setBit(LED_CH0);
+    }
+    if(this->active_side_state==SideState::change_speed_of_effect)
+    {
+            shift_register.unsetBit(LED_CH0);
+            shift_register.unsetBit(LED_CH1);
+            shift_register.unsetBit(LED_CH2);
+    }
+    if(this->active_side_state==SideState::change_para0_of_effect)
+    {
+            shift_register.unsetBit(LED_CH0);
+            shift_register.setBit(LED_CH1);
+            shift_register.setBit(LED_CH2);
+    }
+    if(this->active_side_state==SideState::change_para1_of_effect)
+    {
+            shift_register.setBit(LED_CH0);
+            shift_register.setBit(LED_CH1);
+            shift_register.unsetBit(LED_CH2);
+    }       
+    if(this->active_side_state==SideState::change_color1_of_effect)
+    {
+            shift_register.setBit(LED_CH0);
+            shift_register.setBit(LED_CH1);
+            shift_register.setBit(LED_CH2);
     }
     
     switch (this->active_state)
@@ -213,21 +240,16 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
         shift_register.setBit(LED_FX);
         shift_register.unsetBit(LED_CHTOGGLE);
         shift_register.unsetBit(LED_REMOTE);
-        if(this->active_side_state==SideState::change_speed_of_effect)
+        if(this->active_side_state==SideState::change_speed_of_effect
+                ||this->active_side_state==SideState::change_para0_of_effect
+                ||this->active_side_state==SideState::change_para1_of_effect
+                ||this->active_side_state==SideState::change_color1_of_effect)
         {
             shift_register.setBit(LED_SPEED);
         }
         else
         {
             shift_register.unsetBit(LED_SPEED);
-        }
-        if(this->active_side_state==SideState::change_para1_of_effect)
-        {
-            shift_register.setBit(LED_EMPTY);
-        }
-        else
-        {
-            shift_register.unsetBit(LED_EMPTY);
         }
         break;
     case DeviceState::OPERATION_CONST:
@@ -248,6 +270,23 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
         break;
     }
 
+
+    if(this->active_state==DeviceState::OFF)
+    {
+        shift_register.unsetBit(LED_CONST);
+        shift_register.unsetBit(LED_FX);
+        shift_register.unsetBit(LED_CHTOGGLE);
+        shift_register.unsetBit(LED_REMOTE);
+        shift_register.unsetBit(LED_SPEED);
+        shift_register.unsetBit(LED_EMPTY);       
+
+        shift_register.unsetBit(LED_CH1);
+        shift_register.unsetBit(LED_CH2);
+        shift_register.unsetBit(LED_CH0);
+        shift_register.unsetBit(LED_R);
+        shift_register.unsetBit(LED_G);
+        shift_register.unsetBit(LED_B);
+    }
     shift_register.transmit();
 
 }
@@ -279,11 +318,13 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
         for(Channel * n : this->channels)
         {
         this->effectmap[n]->incCurentTimeByTick();
-        
+        this->effectmap[n]->setColor0(n->getRGBChannelData(0));
+
         if(n->getEffectEnable())
         {
             n->setRGBChannelData(this->effectmap[n]->getLEDs());
             n->putDigitalLED();
+            
         }
     
         }
@@ -291,20 +332,21 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
 
     void Device::turnOn()
     {
-        if(!this->is_on)
+        if(this->active_state==(DeviceState::OFF))
         {
-        for(int n=0;n<this->getNumberofChannels();n++)
-        {
-            channels[n]->setEnable(this->onoff_memory[n]);
-        }
+            for(int n=0;n<this->getNumberofChannels();n++)
+            {
+                channels[n]->setEnable(this->onoff_memory[n]);
+            }
 
-        this->is_on=true;
+                this->active_state=DeviceState::OPERATION;
+            
         }
     }
 
     void Device::turnOff()
     {
-        if(this->is_on)
+        if(!(this->active_state==(DeviceState::OFF)))
         {
         for(int n=0;n<this->getNumberofChannels();n++)
         {
@@ -315,6 +357,7 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
             this->onoff_memory[n]=getActiveChannelByID(n)->getEnable();
             getActiveChannelByID(n)->setEnable(false);
         }
-        this->is_on=false;
+        this->active_state=DeviceState::OFF;
         }
+
     }

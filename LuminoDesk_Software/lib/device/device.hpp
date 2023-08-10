@@ -10,6 +10,8 @@
 
 
 enum class DeviceState {
+    //Device is turned off
+    OFF, 
     //The device is initialising itself
     INIT,
     //The device is open for user input and operates the channel
