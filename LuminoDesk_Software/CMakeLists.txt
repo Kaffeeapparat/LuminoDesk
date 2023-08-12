@@ -35,8 +35,6 @@ add_subdirectory(lib/shiftregister)
 include_directories(/lib/shiftregister)
 add_subdirectory(lib/effect)
 include_directories(/lib/effect)
-add_subdirectory(lib/bluetoothmanager)
-include_directories(lib/bluetoothmanager)
 
 pico_set_program_name(LuminoDesk_Software "LuminoDesk_Software")
 pico_set_program_version(LuminoDesk_Software "0.1")
