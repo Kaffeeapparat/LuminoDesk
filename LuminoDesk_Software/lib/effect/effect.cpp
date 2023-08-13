@@ -12,6 +12,7 @@
         effect_function_list[EffectList::GLOW_MULTI]=&Effect::clacGlowMulti;
         effect_function_list[EffectList::BALL]=&Effect::calcBall;
         effect_function_list[EffectList::SNAKE]=&Effect::calcSnake;
+        
 
     }
 
@@ -20,16 +21,19 @@
         this->attached_channel=channel;
     }
 
-    void Effect::setNormTime(uint32_t time) 
+    void Effect::setNormTime(int32_t time) 
     {
+        if(time>1)
+        {
         this->normal_time=time;
+        }
     }
     uint32_t Effect::getNormTime()
     {
         return this->normal_time;
     }
 
-    void Effect::setCurrentTime(uint32_t time)
+    void Effect::setCurrentTime(int32_t time)
     {
         this->current_time=time;
         if(this->current_time>=this->normal_time)
@@ -52,19 +56,26 @@
         }
     }
 
-    void Effect::setParameter1(uint32_t param)
+    void Effect::setParameter1(int32_t param)
     {
+        if(param<=this->parameter1_max&&param>=this->parameter1_min)
+        {
         this->parameter1=param;
+        }
     }
     uint32_t Effect::getParameter1()
     {
         return this->parameter1;
     }
 
-    void Effect::setParameter0(uint32_t param)
+    void Effect::setParameter0(int32_t param)
     {
+        if(param<=this->parameter0_max&&param>=this->parameter0_min)
+        {
         this->parameter0=param;
+        }
     }
+    
     uint32_t Effect::getParameter0()
     {
         return parameter0;
