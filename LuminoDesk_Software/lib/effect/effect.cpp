@@ -100,6 +100,8 @@
     switch(this->active_effect) {
         case EffectList::DISCO:
            this->active_effect=EffectList::RAMP;
+            this->parameter0=0;
+            this->parameter1=0;
             break;
         case EffectList::RAMP:
            this->active_effect=EffectList::GLOW;
@@ -116,7 +118,15 @@
         case EffectList::SNAKE:
             //Loopback
            this->active_effect=EffectList::DISCO; 
-            break;
+           this->parameter0=100;
+           this->parameter1=200;
+           
+            this->parameter1_max=300;
+            this->parameter1_min=150;
+            this->parameter0_max=150;
+            this->parameter0_min=0;
+           
+           break;
         default:
             break;
     }
@@ -142,6 +152,9 @@
         }
         RGBColor currentColor;
         std::vector<RGBColor> returnvector;
+
+        std::mt19937 gen(this->rd());
+        std::uniform_int_distribution<> dist(0, 255);
 
         returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
      
@@ -227,44 +240,44 @@
     std::vector<RGBColor> Effect::calcDisco()
     {
         double timeratio=(double)this->current_time/(double)(this->normal_time);
-        RGBColor currentColor;
+        double to_decide;
+        double norm_rand=300.0/255.0;
+        RGBColor currentColor={0,0,0};
         std::vector<RGBColor> returnvector;
-        std::srand(to_us_since_boot (get_absolute_time()));
+
+        static std::mt19937 gen(rd());
+        static std::uniform_int_distribution<> dist(0, 255);
+
         returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
-        currentColor.red=255;
-        currentColor.green=255;
-        currentColor.blue=255;
 
         if(timeratio==1)
         {
         for(uint16_t led=0;led<this->attached_channel->getMaxNumberOfLeds();led++)
         {
-            if(parameter1<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            to_decide=dist(gen)*norm_rand;
+
+            if(to_decide<this->parameter0&&((uint32_t)this->parameter0!=(uint32_t)this->parameter0_min))
             {
-                while(currentColor.red > parameter0)
-                {
-                    currentColor.red=1+std::rand() / ((RAND_MAX + 1u) / 255);
-                }
+                currentColor.red=dist(gen);
             }
-            if(parameter1<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            if(to_decide>this->parameter1&&((uint32_t)this->parameter1!=(uint32_t)this->parameter1_max))
             {
-                while(currentColor.green > parameter0)
-                {
-                    currentColor.green=1+std::rand() / ((RAND_MAX + 1u) / 255);
-                }
+                currentColor.green=dist(gen);
             }
-            if(parameter1<(1+std::rand() / ((RAND_MAX + 1u) / 255)))
+            if((to_decide<this->parameter1)&&(to_decide>this->parameter0)&&((uint32_t)this->parameter1!=(uint32_t)this->parameter0))
             {
-                while(currentColor.blue > parameter0)
-                {
-                    currentColor.blue=1+std::rand() / ((RAND_MAX + 1u) / 255);
-                }
+                currentColor.blue=dist(gen);
+
             }
 
 
             if(led<this->attached_channel->getNumberOfLeds())
             {
             returnvector[led]=currentColor;
+            }
+            else
+            {
+            returnvector[led]={0,0,0};
             }
 
         }

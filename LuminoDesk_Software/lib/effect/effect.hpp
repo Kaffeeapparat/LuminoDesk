@@ -1,5 +1,6 @@
 #pragma once
 
+#include <random>
 
 #include "../hardwaredef/hardwaredef.hpp"
 #include "../ledchannel/ledchannel.hpp"
@@ -56,6 +57,8 @@ private:
 
     uint32_t normal_time=30;
     uint32_t current_time=0;
+    std::random_device rd;
+
     
     uint32_t parameter1=1;
     uint32_t parameter0=1;
