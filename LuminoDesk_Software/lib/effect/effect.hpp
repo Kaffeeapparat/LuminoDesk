@@ -24,10 +24,13 @@ public:
     void setParameter0(int32_t param);
     uint32_t getParameter0();
 
-    void setColor1(RGBColor color);
-    RGBColor getColor1();
     void setColor0(RGBColor color);
+    void setColor0(RGBColorSelect chosen_color,int32_t value);
     RGBColor getColor0();
+
+    void setColor1(RGBColor color);
+    void setColor1(RGBColorSelect chosen_color,int32_t value);
+    RGBColor getColor1();
 
     std::vector<RGBColor> getEffectColors();
     void setEffectColors(std::vector<RGBColor>);

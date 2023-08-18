@@ -319,7 +319,35 @@ int main() {
             case SideState::change_para0_of_effect:
                 instance.getActiveEffect()->setParameter0(instance.getActiveEffect()->getParameter0()+tmpencoderval);
                 break;
-            default:
+            case SideState::change_color1_of_effect:
+                switch(instance.getActiveColor())
+                {
+                    case RGBColorSelect::RED:
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        break;
+                    case RGBColorSelect::GREEN:
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        break;
+                    case RGBColorSelect::BLUE:
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        break;
+                    case RGBColorSelect::VIOLET:
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        break;
+                case RGBColorSelect::TURQUOISE:
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        break;
+                case RGBColorSelect::WHITE:
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
+                        break;
+                }
+        default:
+
+    
             break;
             }
             }

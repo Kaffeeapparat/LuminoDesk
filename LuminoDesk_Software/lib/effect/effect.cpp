@@ -93,6 +93,36 @@
     {
         this->effect_color[1]=color;
     }
+
+    void Effect::setColor1(RGBColorSelect chosen_color,int32_t value)
+    {
+        auto it=rgb_color_weights.find(chosen_color);
+
+        for(RGBColorSelect color : rgb_color_weights[it->first])
+        {
+
+        if(value>=0)
+        {
+            if((RGBcolorReturnColor(this->effect_color[1],color)+value)>(DIG_WRAP))
+            {
+                RGBcolorSetColor(this->effect_color[1],color,DIG_WRAP);
+            }
+            else{
+                RGBcolorSetColor(this->effect_color[1],color,RGBcolorReturnColor(this->effect_color[1],color)+DIG_WRAP);
+            }
+        }
+        else if(((int32_t)RGBcolorReturnColor(this->effect_color[1],color)+value)>0)
+        {
+            RGBcolorSetColor(this->effect_color[1],color,RGBcolorReturnColor(this->effect_color[1],color)+value);
+        }
+        else
+        {
+            RGBcolorSetColor(this->effect_color[1],color,0);
+        }
+        }
+
+    }
+
     RGBColor Effect::getColor1()
     {
         return this->effect_color[1];

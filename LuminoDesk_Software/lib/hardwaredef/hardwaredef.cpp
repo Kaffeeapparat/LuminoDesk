@@ -42,6 +42,48 @@ std::map<RGBColorSelect,std::vector<RGBColorSelect>> rgb_color_weights=
     {RGBColorSelect::WHITE,{RGBColorSelect::RED,RGBColorSelect::GREEN,RGBColorSelect::BLUE}}
 };
 
+uint8_t RGBcolorReturnColor(RGBColor to_return,RGBColorSelect color)
+{
+    uint8_t value=0;
+    switch(color) 
+    {
+        case RGBColorSelect::RED:
+            // Handle red color
+            value=to_return.red;
+            break;
+        case RGBColorSelect::GREEN:
+            // Handle green color
+            value=to_return.green;
+            break;
+        case RGBColorSelect::BLUE:
+            // Handle blue color
+            value=to_return.blue;
+            break;
+
+    }
+    return value;
+}
+
+void RGBcolorSetColor(RGBColor to_set,RGBColorSelect color,uint8_t to_set_value)
+{
+    
+    switch(color) 
+    {
+        case RGBColorSelect::RED:
+            // Handle red color
+            to_set.red=to_set_value;
+            break;
+        case RGBColorSelect::GREEN:
+            // Handle green color
+            to_set.green=to_set_value;
+            break;
+        case RGBColorSelect::BLUE:
+            // Handle blue color
+            to_set.blue=to_set_value;
+            break;
+
+    }
+}
 
 void turnOnSignal(uint8_t led)
 {
