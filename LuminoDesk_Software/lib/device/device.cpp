@@ -318,7 +318,6 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
         for(Channel * n : this->channels)
         {
         this->effectmap[n]->incCurentTimeByTick();
-        this->effectmap[n]->setColor0(n->getRGBChannelData(0));
 
         if(n->getEffectEnable())
         {
