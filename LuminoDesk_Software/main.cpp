@@ -171,7 +171,7 @@ int main() {
                 {
                         instance.setSideState(SideState::change_led_color_and_channel);
                 }
-            else if(instance.getActiveChannel()->getMode()==MODE_DIGITAL)
+            else if(instance.getActiveChannel()->getEffectEnable())
                 {
                     instance.setSideState(SideState::change_speed_of_effect);
                 }                

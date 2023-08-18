@@ -322,8 +322,14 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
         if(n->getEffectEnable())
         {
             n->setRGBChannelData(this->effectmap[n]->getLEDs());
+            if(n->getMode()==MODE_DIGITAL)
+            {
             n->putDigitalLED();
-            
+            }
+            else
+            {
+            n->putRGBChannelData();
+            }
         }
     
         }
