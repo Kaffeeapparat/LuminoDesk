@@ -4,6 +4,9 @@
     {
         //Setup colorarray for non remote operation
         this->effect_color.resize(2);
+        effect_color[0]={0,0,0};
+        effect_color[1]={0,0,0};
+
 
         //Setup functionpointers
         effect_function_list[EffectList::DISCO]=&Effect::calcDisco;
