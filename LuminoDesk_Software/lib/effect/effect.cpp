@@ -402,3 +402,24 @@ std::map<EffectList,bool> is_effect_analog=
 };
 
 
+RGBColor Effect::overlayColors(RGBColor n,RGBColor m)
+{
+    RGBColor return_color={0,0,0};
+
+    if(n.red <= m.red)
+        return_color.red=m.red;
+    else
+        return_color.red=n.red;
+
+    if(n.green <= m.green)
+        return_color.green=m.green;
+    else
+        return_color.green=n.green;
+
+    if(n.blue <= m.blue)
+        return_color.blue=m.blue;
+    else
+        return_color.blue=n.blue;
+
+    return return_color;
+}

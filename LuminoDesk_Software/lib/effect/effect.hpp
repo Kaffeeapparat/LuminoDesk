@@ -41,9 +41,9 @@ public:
     EffectList getEffect();
 
     void updateEffect();
-
     void setChannel(Channel* channel);
 
+    RGBColor overlayColors(RGBColor n,RGBColor m);
     
     
     //Outputs the LEDs. Analog effects return a Vector with one element
