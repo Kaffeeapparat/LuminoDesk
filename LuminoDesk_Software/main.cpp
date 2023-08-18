@@ -345,9 +345,7 @@ int main() {
                         instance.getActiveEffect()->setColor1(instance.getActiveColor(),tmpencoderval*4);
                         break;
                 }
-        default:
-
-    
+            default:
             break;
             }
             }

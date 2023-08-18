@@ -210,9 +210,6 @@
         RGBColor currentColor;
         std::vector<RGBColor> returnvector;
 
-        std::mt19937 gen(this->rd());
-        std::uniform_int_distribution<> dist(0, 255);
-
         returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
      
         currentColor.red=this->effect_color[0].red*timerratio;
@@ -409,7 +406,7 @@
         }
 
         RGBColor currentColor;
-        currentColor.red=50;
+        currentColor=this->effect_color[0];
 
         std::vector<RGBColor> returnvector;
         returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
