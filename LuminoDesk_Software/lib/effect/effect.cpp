@@ -144,17 +144,29 @@
     switch(this->active_effect) {
         case EffectList::DISCO:
            this->active_effect=EffectList::RAMP;
-            this->parameter0=0;
-            this->parameter1=0;
+           this->parameter0=0;
+           this->parameter1=0;
+           
+           this->parameter1_max=300;
+           this->parameter1_min=0;
+           this->parameter0_max=300;
+           this->parameter0_min=0;
             break;
         case EffectList::RAMP:
            this->active_effect=EffectList::GLOW;
+           this->parameter0=0;
+           this->parameter1=0;
+           
+           this->parameter1_max=300;
+           this->parameter1_min=0;
+           this->parameter0_max=300;
+           this->parameter0_min=0;
             break;
         case EffectList::GLOW:
-        //    this->active_effect=EffectList::GLOW_MULTI;
-        //     break;
-        //case EffectList::GLOW_MULTI:
-        //   this->active_effect=EffectList::BALL;
+            this->active_effect=EffectList::GLOW_MULTI;
+            break;
+        case EffectList::GLOW_MULTI:
+        //this->active_effect=EffectList::BALL;
         //    break;
         // case EffectList::BALL:
             this->active_effect=EffectList::SNAKE;
@@ -188,6 +200,7 @@
 
     std::vector<RGBColor> Effect::calcRamp()
     {
+
         double timerratio=(((double)((this->current_time-(this->parameter0+this->parameter1))))/((double)this->normal_time-(this->parameter0+this->parameter1)));
         
         if(timerratio<0||timerratio>1)
@@ -334,7 +347,48 @@
     }
     std::vector<RGBColor> Effect::clacGlowMulti()
         {
-        std::vector<RGBColor> returnvector={{1,2,3}};
+        double timeratio=((double)this->current_time)/(double)this->normal_time;
+        timeratio*=2;
+        RGBColor currentColor;
+        std::vector<RGBColor> returnvector;
+
+        returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
+     
+        if(timeratio<1)
+        {
+        timeratio+=0.5;
+        currentColor.red=std::fabs(((double)this->effect_color[0].red)*timeratio);
+        currentColor.green=std::fabs(((double)this->effect_color[0].green)*timeratio);
+        currentColor.blue=std::fabs(((double)this->effect_color[0].blue)*timeratio);
+        }
+        else if(timeratio>=1)
+        {
+        timeratio-=0.5;
+        currentColor.red=std::fabs(((double)this->effect_color[1].red)*timeratio*2);
+        currentColor.green=std::fabs(((double)this->effect_color[1].green)*timeratio*2);
+        currentColor.blue=std::fabs(((double)this->effect_color[1].blue)*timeratio*2);       
+        }
+
+        RGBColor test1;
+        RGBColor test2;
+        RGBColor test3;
+
+        for(uint16_t led=0;led<this->attached_channel->getMaxNumberOfLeds();led++)
+        {
+            if(led<this->attached_channel->getNumberOfLeds())
+            {
+            returnvector[led]=currentColor;
+            }
+
+        }
+/*
+
+        returnvector.empty();
+        returnvector.push_back(test1);
+        returnvector.push_back(test2);
+        returnvector.push_back(test3);
+*/
+
         return returnvector;
         }
     std::vector<RGBColor> Effect::calcRainbow()
@@ -358,7 +412,6 @@
         currentColor.red=50;
 
         std::vector<RGBColor> returnvector;
-
         returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
 
     for(uint8_t n=0; timeratio_min*n<1;n++)
