@@ -199,7 +199,8 @@ enum class EffectList {
     RAINBOW,
     SNAKE,
     BALL,
-    RAMP
+    RAMP,
+    COLORBAND
 };
 
 

@@ -15,6 +15,7 @@
         effect_function_list[EffectList::GLOW_MULTI]=&Effect::clacGlowMulti;
         effect_function_list[EffectList::BALL]=&Effect::calcBall;
         effect_function_list[EffectList::SNAKE]=&Effect::calcSnake;
+        effect_function_list[EffectList::COLORBAND]=&Effect::calcColorband;
         
 
     }
@@ -173,7 +174,7 @@
              break;
         case EffectList::SNAKE:
             //Loopback
-           this->active_effect=EffectList::DISCO; 
+           this->active_effect=EffectList::COLORBAND; 
            this->parameter0=100;
            this->parameter1=200;
            
@@ -183,6 +184,10 @@
             this->parameter0_min=0;
            
            break;
+        case EffectList::COLORBAND:
+            this->active_effect=EffectList::RAMP;
+            this->parameter0=0;
+            this->parameter1=0;
         default:
             break;
     }
@@ -348,7 +353,6 @@
         timeratio*=2;
         RGBColor currentColor;
         std::vector<RGBColor> returnvector;
-
         returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
      
         if(timeratio<1.0)
@@ -410,11 +414,63 @@
 
         return returnvector;
         }
-    std::vector<RGBColor> Effect::calcRainbow()
+
+
+
+
+
+    std::vector<RGBColor> Effect::calcColorband()
+    {
+        double timeratio=(double)this->current_time/((double)this->normal_time);
+        double ledratio=0;
+        double color_passages=this->effect_color.size();
+        std::vector<RGBColor> returnvector;
+        double boarder_min,boarder_max=0;
+        returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
+
+        for(double n=0;n<color_passages;n++)
+        {
+        boarder_min=(1/color_passages)*n;
+        boarder_max=(1/color_passages)*(n+1.0);
+
+        for(int i=0;i<this->attached_channel->getNumberOfLeds();i++)
+        {
+            if(i<this->attached_channel->getMaxNumberOfLeds())
             {
-        std::vector<RGBColor> returnvector={{1,2,3}};
-        return returnvector;
+                ledratio=(double)i/(double)this->attached_channel->getNumberOfLeds();
+
+                if((ledratio>=boarder_min)&&(ledratio<boarder_max))
+                {
+                    returnvector[i]=effect_color[n];
+                }
+            }
+            else
+            {
+                returnvector[i]={0,0,0};
+            }
+
+
         }
+        
+        double rotationstep=1.0/(double)this->normal_time;
+
+        RGBColor currentelement,tmpelement;
+        for(double n=0;n<timeratio;n+=rotationstep)
+        {
+            tmpelement=returnvector[0];
+            for(int i=0;i<this->attached_channel->getNumberOfLeds();++i)
+            {
+                currentelement=returnvector[i];
+                returnvector[i]=tmpelement;
+                tmpelement=currentelement;
+            }
+            returnvector[0]=tmpelement;
+        }
+        }
+        return returnvector;
+    }
+
+
 
     std::vector<RGBColor> Effect::calcSnake()
     {
@@ -473,7 +529,8 @@ std::map<EffectList,bool> is_effect_analog=
     {EffectList::GLOW_MULTI,0},
     {EffectList::RAINBOW,1},
     {EffectList::SNAKE,0},
-    {EffectList::BALL,0}  
+    {EffectList::BALL,0},
+    {EffectList::COLORBAND,1}
 };
 
 
