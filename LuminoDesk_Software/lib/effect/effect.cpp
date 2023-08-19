@@ -108,19 +108,19 @@
         {
             if((RGBcolorReturnColor(this->effect_color[1],color)+value)>(DIG_WRAP))
             {
-                RGBcolorSetColor(this->effect_color[1],color,DIG_WRAP);
+                RGBcolorSetColor(&(this->effect_color[1]),color,DIG_WRAP);
             }
             else{
-                RGBcolorSetColor(this->effect_color[1],color,RGBcolorReturnColor(this->effect_color[1],color)+DIG_WRAP);
+                RGBcolorSetColor(&(this->effect_color[1]),color,RGBcolorReturnColor(this->effect_color[1],color)+DIG_WRAP);
             }
         }
         else if(((int32_t)RGBcolorReturnColor(this->effect_color[1],color)+value)>0)
         {
-            RGBcolorSetColor(this->effect_color[1],color,RGBcolorReturnColor(this->effect_color[1],color)+value);
+            RGBcolorSetColor(&(this->effect_color[1]),color,RGBcolorReturnColor(this->effect_color[1],color)+value);
         }
         else
         {
-            RGBcolorSetColor(this->effect_color[1],color,0);
+            RGBcolorSetColor(&(this->effect_color[1]),color,0);
         }
         }
 

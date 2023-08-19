@@ -166,7 +166,7 @@ struct RGBColor {
 };
 
 uint8_t RGBcolorReturnColor(RGBColor to_return,RGBColorSelect color);
-void RGBcolorSetColor(RGBColor to_set,RGBColorSelect color,uint8_t to_set_value);
+void RGBcolorSetColor(RGBColor* to_set,RGBColorSelect color,uint8_t to_set_value);
 //Holds the selectable Colors on the frontpanel and combines them with an 
 //vector of the color compesition. Is done to build an iterator around
 //every color combination and set the colors in hardware. 

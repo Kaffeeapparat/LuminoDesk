@@ -64,22 +64,22 @@ uint8_t RGBcolorReturnColor(RGBColor to_return,RGBColorSelect color)
     return value;
 }
 
-void RGBcolorSetColor(RGBColor to_set,RGBColorSelect color,uint8_t to_set_value)
+void RGBcolorSetColor(RGBColor* to_set,RGBColorSelect color,uint8_t to_set_value)
 {
     
     switch(color) 
     {
         case RGBColorSelect::RED:
             // Handle red color
-            to_set.red=to_set_value;
+            to_set->red=to_set_value;
             break;
         case RGBColorSelect::GREEN:
             // Handle green color
-            to_set.green=to_set_value;
+            to_set->green=to_set_value;
             break;
         case RGBColorSelect::BLUE:
             // Handle blue color
-            to_set.blue=to_set_value;
+            to_set->blue=to_set_value;
             break;
 
     }
