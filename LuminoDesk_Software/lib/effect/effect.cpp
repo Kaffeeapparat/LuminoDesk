@@ -351,19 +351,41 @@
 
         returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
      
-        if(timeratio<1)
-        {
-        timeratio+=0.5;
-        currentColor.red=std::fabs(((double)this->effect_color[0].red)*timeratio);
-        currentColor.green=std::fabs(((double)this->effect_color[0].green)*timeratio);
-        currentColor.blue=std::fabs(((double)this->effect_color[0].blue)*timeratio);
-        }
-        else if(timeratio>=1)
+        if(timeratio<1.0)
         {
         timeratio-=0.5;
-        currentColor.red=std::fabs(((double)this->effect_color[1].red)*timeratio*2);
-        currentColor.green=std::fabs(((double)this->effect_color[1].green)*timeratio*2);
-        currentColor.blue=std::fabs(((double)this->effect_color[1].blue)*timeratio*2);       
+            if(timeratio<0)
+            {
+            timeratio+=0.5;
+            currentColor.red=std::fabs(((double)this->effect_color[0].red)*timeratio*2);
+            currentColor.green=std::fabs(((double)this->effect_color[0].green)*timeratio*2);
+            currentColor.blue=std::fabs(((double)this->effect_color[0].blue)*timeratio*2);
+            }
+            else
+            {
+            timeratio-=0.5;
+            currentColor.red=std::fabs(((double)this->effect_color[0].red)*timeratio*2);
+            currentColor.green=std::fabs(((double)this->effect_color[0].green)*timeratio*2);
+            currentColor.blue=std::fabs(((double)this->effect_color[0].blue)*timeratio*2);
+            }
+        }
+        else if(timeratio>=1.0)
+        {
+        timeratio-=1.5;
+            if(timeratio<0)
+            {
+            timeratio+=0.5;
+            currentColor.red=std::fabs(((double)this->effect_color[1].red)*timeratio*2);
+            currentColor.green=std::fabs(((double)this->effect_color[1].green)*timeratio*2);
+            currentColor.blue=std::fabs(((double)this->effect_color[1].blue)*timeratio*2);
+            }
+            else
+            {
+            timeratio-=0.5;
+            currentColor.red=std::fabs(((double)this->effect_color[1].red)*timeratio*2);
+            currentColor.green=std::fabs(((double)this->effect_color[1].green)*timeratio*2);
+            currentColor.blue=std::fabs(((double)this->effect_color[1].blue)*timeratio*2);
+            } 
         }
 
         RGBColor test1;
