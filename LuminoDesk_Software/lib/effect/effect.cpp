@@ -433,9 +433,9 @@
         boarder_min=(1/color_passages)*n;
         boarder_max=(1/color_passages)*(n+1.0);
 
-        for(int i=0;i<this->attached_channel->getNumberOfLeds();i++)
+        for(int i=0;i<this->attached_channel->getMaxNumberOfLeds();i++)
         {
-            if(i<this->attached_channel->getMaxNumberOfLeds())
+            if(i<this->attached_channel->getNumberOfLeds())
             {
                 ledratio=(double)i/(double)this->attached_channel->getNumberOfLeds();
 
@@ -451,22 +451,16 @@
 
 
         }
-        
-        double rotationstep=1.0/(double)this->normal_time;
+        }
+        double rotationstep=(double)1.0/(double)this->normal_time;
+        uint32_t number_of_roationsteps=0;
 
-        RGBColor currentelement,tmpelement;
-        for(double n=0;n<timeratio;n+=rotationstep)
-        {
-            tmpelement=returnvector[0];
-            for(int i=0;i<this->attached_channel->getNumberOfLeds();++i)
-            {
-                currentelement=returnvector[i];
-                returnvector[i]=tmpelement;
-                tmpelement=currentelement;
-            }
-            returnvector[0]=tmpelement;
+        for(double n=0;n<timeratio;n+=rotationstep){
+            number_of_roationsteps++;
         }
-        }
+
+        std::rotate(returnvector.begin(),returnvector.begin()+number_of_roationsteps*2,returnvector.begin()+this->attached_channel->getNumberOfLeds());
+        
         return returnvector;
     }
 
