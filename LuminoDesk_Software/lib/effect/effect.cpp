@@ -471,7 +471,7 @@
         double timeratio=(double)this->current_time/((double)this->normal_time);
         double timeratio_min = 1.0/((double)this->normal_time);
         
-        uint8_t snake_width=(double)this->attached_channel->getMaxNumberOfLeds()*(double)timeratio_min;
+        uint8_t snake_width=(double)this->attached_channel->getNumberOfLeds()*(double)timeratio_min;
         if(snake_width==0)
         {
             snake_width=1;
@@ -489,9 +489,16 @@
         {
         for(uint16_t led=0;led<this->attached_channel->getMaxNumberOfLeds();led++)
         {
+            if(led<this->attached_channel->getNumberOfLeds())
+            {
             if(led>n*snake_width && led<(n+2)*snake_width)
             {
                 returnvector[led]=currentColor;
+            }
+            }
+            else
+            {
+                returnvector[led]={0,0,0};
             }
             
         }
