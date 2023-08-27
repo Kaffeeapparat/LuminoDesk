@@ -131,7 +131,7 @@ void Channel::setRGBChannelData(RGBColorSelect color, int32_t value)
 
 void Channel::setRGBChannelData(std::vector<RGBColor> led_vector)
 {
-    if(this->effect_enable)
+    if(this->mode==MODE_DIGITAL)
     {
         this->led_strip_data=led_vector;
     }

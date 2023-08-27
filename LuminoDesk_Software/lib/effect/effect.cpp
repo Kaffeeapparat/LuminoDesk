@@ -16,6 +16,7 @@
         effect_function_list[EffectList::BALL]=&Effect::calcBall;
         effect_function_list[EffectList::SNAKE]=&Effect::calcSnake;
         effect_function_list[EffectList::COLORBAND]=&Effect::calcColorband;
+        effect_function_list[EffectList::SPARKLE]=&Effect::calcSparkle;
         
 
     }
@@ -142,6 +143,7 @@
     }
     void Effect::toggleEffect()
     {
+        
     switch(this->active_effect) {
         case EffectList::DISCO:
            this->active_effect=EffectList::RAMP;
@@ -185,9 +187,15 @@
            
            break;
         case EffectList::COLORBAND:
+            this->active_effect=EffectList::SPARKLE;
+            this->parameter0=0;
+            this->parameter1=0;
+            break;
+        case EffectList::SPARKLE:
             this->active_effect=EffectList::RAMP;
             this->parameter0=0;
             this->parameter1=0;
+            break;
         default:
             break;
     }
@@ -522,6 +530,99 @@
         return returnvector;
         }
 
+    
+    std::vector<RGBColor> Effect::calcSparkle()
+    {
+        double timeratio=(double)this->current_time/((double)this->normal_time);
+        double timeratio_min = 1.0/((double)this->normal_time);
+        double rate=0.3;
+
+        RGBColor currentColor;
+        currentColor=this->effect_color[0];
+
+        std::vector<RGBColor> returnvector=this->attached_channel->getRGBChannelData();
+        returnvector.resize(this->attached_channel->getMaxNumberOfLeds());
+
+        static std::mt19937 gen(rd());
+        static std::uniform_int_distribution<> dist(0, 100);
+
+        if(this->leds.size()!=this->attached_channel->getMaxNumberOfLeds())
+        {
+            this->leds.resize(this->attached_channel->getMaxNumberOfLeds());
+        }
+
+
+        if(timeratio==1)
+        {
+        for(int n=0;n<this->leds.size();n++)
+        {
+            if(dist(gen)>50)
+            {    
+            this->leds[n]=currentColor;
+            }
+            else
+            {
+            this->leds[n]={0,0,0};
+            }
+        }
+        }
+
+        for(int n=0;n<this->attached_channel->getMaxNumberOfLeds();n++)
+        {
+            if(returnvector[n].red<this->leds[n].red)
+            {
+                if((returnvector[n].red==0)&&(this->leds[n].red!=0))
+                {
+                    returnvector[n].red=5;
+                }
+                else
+                {
+                returnvector[n].red*=(1+rate);
+                }
+            }
+            else if((this->leds[n].red==0))
+            {
+                returnvector[n].red*=(1-rate);
+            }
+
+            if(returnvector[n].green<this->leds[n].green)
+            {
+                if((returnvector[n].green==0)&&(this->leds[n].green!=0))
+                {
+                    returnvector[n].green=5;
+                }
+                else
+                {
+                returnvector[n].green*=(1+rate);
+                }
+            }
+            else if((this->leds[n].green==0))
+            {
+                returnvector[n].green*=(1-rate);
+            }
+
+            if(returnvector[n].blue<this->leds[n].blue)
+            {
+                if((returnvector[n].blue==0)&&(this->leds[n].blue!=0))
+                {
+                    returnvector[n].blue=5;
+                }
+                else
+                {
+                returnvector[n].blue*=(1+rate);
+                }
+            }
+            else if((this->leds[n].blue==0))
+            {
+                returnvector[n].blue*=(1-rate);
+            }
+        }
+
+        
+        return returnvector;
+
+    }        
+
 std::map<EffectList,bool> is_effect_analog=
 {
     {EffectList::RAMP,1},
@@ -531,7 +632,8 @@ std::map<EffectList,bool> is_effect_analog=
     {EffectList::RAINBOW,1},
     {EffectList::SNAKE,0},
     {EffectList::BALL,0},
-    {EffectList::COLORBAND,1}
+    {EffectList::COLORBAND,1},
+    {EffectList::SPARKLE,1}
 };
 
 

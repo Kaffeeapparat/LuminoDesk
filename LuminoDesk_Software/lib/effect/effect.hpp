@@ -82,7 +82,7 @@ private:
     std::vector<RGBColor> calcBall();
     std::vector<RGBColor> calcRamp();
     std::vector<RGBColor> calcColorband();
-
+    std::vector<RGBColor> calcSparkle();
 
 };
 
