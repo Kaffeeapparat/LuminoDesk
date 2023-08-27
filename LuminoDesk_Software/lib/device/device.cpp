@@ -90,6 +90,9 @@ void Device::toggleActiveColor()
             setActiveColor(RGBColorSelect::TURQUOISE);
             break;
         case RGBColorSelect::TURQUOISE:
+            setActiveColor(RGBColorSelect::YELLOW);
+            break;
+        case RGBColorSelect::YELLOW:
             setActiveColor(RGBColorSelect::WHITE);
             break;
         case RGBColorSelect::WHITE:
@@ -156,6 +159,11 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
             shift_register.unsetBit(LED_R);
             shift_register.setBit(LED_G);
             shift_register.setBit(LED_B);
+            break;
+        case RGBColorSelect::YELLOW:
+            shift_register.setBit(LED_R);
+            shift_register.setBit(LED_G);
+            shift_register.unsetBit(LED_B);
             break;
         case RGBColorSelect::WHITE:
             shift_register.setBit(LED_R);
