@@ -102,18 +102,18 @@
     void Effect::setColor1(RGBColorSelect chosen_color,int32_t value)
     {
         auto it=rgb_color_weights.find(chosen_color);
-
+        value*=4;
         for(RGBColorSelect color : rgb_color_weights[it->first])
         {
 
         if(value>=0)
         {
-            if((RGBcolorReturnColor(this->effect_color[1],color)+value)>(DIG_WRAP))
+            if((RGBcolorReturnColor(this->effect_color[1],color))>(DIG_WRAP-value))
             {
                 RGBcolorSetColor(&(this->effect_color[1]),color,DIG_WRAP);
             }
             else{
-                RGBcolorSetColor(&(this->effect_color[1]),color,RGBcolorReturnColor(this->effect_color[1],color)+DIG_WRAP);
+                RGBcolorSetColor(&(this->effect_color[1]),color,RGBcolorReturnColor(this->effect_color[1],color)+value);
             }
         }
         else if(((int32_t)RGBcolorReturnColor(this->effect_color[1],color)+value)>0)
@@ -143,7 +143,7 @@
     }
     void Effect::toggleEffect()
     {
-        
+
     switch(this->active_effect) {
         case EffectList::DISCO:
            this->active_effect=EffectList::RAMP;

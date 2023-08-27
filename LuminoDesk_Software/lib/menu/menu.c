@@ -31,6 +31,9 @@ void updateActiveColor(device_t* instance ){
             instance->active_color=TURQUOISE;
             break;
         case TURQUOISE:
+            instance->active_color=YELLOW;
+            break;
+        case: YELLOW:
             instance->active_color=WHITE;
             break;
         case WHITE:
