@@ -175,15 +175,15 @@ void Channel::putRGBChannelData()
 void Channel::putincRGBChannelData(RGBColorSelect chosen_color, int32_t value)
 {
     auto it=rgb_color_weights.find(chosen_color);
+        value*=4;
 
     for(RGBColorSelect color : rgb_color_weights[it->first])
     {
     if(getMode()==MODE_ANALOG)
     {
-        value*=4;
         if(value>=0)
         {
-            if((getRGBChannelData(color)+value)>(DIG_WRAP))
+            if((getRGBChannelData(color))>(DIG_WRAP-value))
             {
                 setRGBChannelData(color,DIG_WRAP);
             }
@@ -202,10 +202,9 @@ void Channel::putincRGBChannelData(RGBColorSelect chosen_color, int32_t value)
     }
         else if(getMode()==MODE_DIGITAL)
         {
-            value*=4;
             if(value>=0)
             {
-                if((getRGBChannelData(color)+value)>(DIG_WRAP))
+                if((getRGBChannelData(color))>(DIG_WRAP-value))
                 {
                     setRGBChannelData(color,DIG_WRAP);
                 }
