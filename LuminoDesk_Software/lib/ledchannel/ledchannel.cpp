@@ -341,9 +341,6 @@ void Channel::initDigital()
 */
 void Channel::loadDigitalCore(uint8_t pio_select)
 {
-    gpio_deinit(this->color_r_signal);
-
-
     if(isDigitalCoreloaded())
     {
         return;

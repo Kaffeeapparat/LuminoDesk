@@ -32,9 +32,9 @@ void checkButtonDebounceLock();
 
 int main() {
     stdio_init_all();
-    std::cout << "Teststring, please!!!" << "\n";
+    //std::cout << "Teststring, please!!!" << "\n";
     if (cyw43_arch_init()) {
-        std::cout << "WiFi init failed" << std::endl;
+    //    std::cout << "WiFi init failed" << std::endl;
         gpio_init(1);
         gpio_set_dir(1,1);
         gpio_put(1,1);
@@ -140,7 +140,7 @@ int main() {
         {
             tight_loop_contents();
         }
-        printLastInput();
+        //printLastInput();
         switch (lastinput) 
         {
         case ButtonAction::onoff_long:
@@ -321,7 +321,7 @@ int main() {
                 {
                     if(instance.getActiveChannel())
                     instance.getActiveChannel()->putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
-                    printf("/n Rotary Encoder:%d",tmpencoderval);
+                    //printf("/n Rotary Encoder:%d",tmpencoderval);
                 }
             }
         }
