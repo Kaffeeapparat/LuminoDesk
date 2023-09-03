@@ -30,9 +30,16 @@ extern uint32_t shiftregisterbitmask;
 // Shiftmask describes the location of the functions
 // in terms of shift register position
 
+
+//Offset, because there is a shiftregister in the
+//main PCB, and the softwaredevelopment was made without it.
+
+constexpr uint8_t FRONTPANEL_OFFSET= 16;
 // Button matrix
 constexpr uint8_t SHIFTMASK_SMR0 = 0;
 constexpr uint8_t SHIFTMASK_SMR1 = 1;
+
+
 
 // Frontpanel LEDs
 constexpr uint8_t LED_CONST = 13;
@@ -48,57 +55,62 @@ constexpr uint8_t LED_CH0 = 2;
 constexpr uint8_t LED_CH1 = 4;
 constexpr uint8_t LED_CH2 = 3;
 
+// Switchmatrix Columns
+constexpr uint8_t SMCR1 = 1;
+constexpr uint8_t SMCR2 = 0;
+
+
+
 // Control signals
-constexpr uint8_t CH0_ENB_CHN = 5;
-constexpr uint8_t CH1_ENB_CHN = 13;
-constexpr uint8_t CH2_ENB_CHN = 14;
-constexpr uint8_t CH0_CHG_VLT = 15;
-constexpr uint8_t CH1_CHG_VLT = 16;
-constexpr uint8_t CH2_CHG_VLT = 17;
+//q6=1
+//q7=0
+
+constexpr uint8_t CH0_ENB_CHN = 7+FRONTPANEL_OFFSET;
+constexpr uint8_t CH1_ENB_CHN = 6+FRONTPANEL_OFFSET;
+constexpr uint8_t CH2_ENB_CHN = 5+FRONTPANEL_OFFSET;
+constexpr uint8_t CH0_CHG_VLT = 4+FRONTPANEL_OFFSET;
+constexpr uint8_t CH1_CHG_VLT = 3+FRONTPANEL_OFFSET;
+constexpr uint8_t CH2_CHG_VLT = 2+FRONTPANEL_OFFSET;//checked
 
 // Pin Definitions for the Pico_W Hardware Revision 1
 
 // Button driver
 // SMR stands for Switch Matrix Row
-constexpr uint SMC1 = 26; // onoff checked
-constexpr uint SMC2 = 22; // constant checked
-constexpr uint SMC3 = 28; // speed checked
-constexpr uint SMC4 = 20; // remote checked
-constexpr uint SMC5 = 19; // channelonoffchecked
+constexpr uint SMC1 = 14; // onoff checked
+constexpr uint SMC2 = 13; // constant checked
+constexpr uint SMC3 = 12; // speed checked
+constexpr uint SMC4 = 11; // remote checked
+constexpr uint SMC5 = 15; // channelonoffchecked
 
 // Shift register lines
-constexpr uint SHIFT_DATA = 18;
-constexpr uint SHIFT_CLK = 17;
-constexpr uint SHIFT_LATCH = 16;
+constexpr uint SHIFT_DATA = 22;
+constexpr uint SHIFT_CLK = 21;
+constexpr uint SHIFT_LATCH = 20;
 
 // LED Channel0
-constexpr uint8_t CH0_LED_R = 2;
-constexpr uint8_t CH0_LED_G = 3;
-constexpr uint8_t CH0_LED_B = 4;
-constexpr uint8_t CH0_CHG_MOD = 8;
+constexpr uint8_t CH0_LED_R = 0;
+constexpr uint8_t CH0_LED_G = 1;
+constexpr uint8_t CH0_LED_B = 2;
+constexpr uint8_t CH0_CHG_MOD = 26;
 
 // LED Channel2
-constexpr uint8_t CH1_LED_R = 8;
-constexpr uint8_t CH1_LED_G = 8;
-constexpr uint8_t CH1_LED_B = 8;
-constexpr uint8_t CH1_CHG_MOD = 8;
+constexpr uint8_t CH1_LED_R = 3;
+constexpr uint8_t CH1_LED_G = 4;
+constexpr uint8_t CH1_LED_B = 5;
+constexpr uint8_t CH1_CHG_MOD = 27;
 
 // LED Channel3
-constexpr uint8_t CH2_LED_R = 8;
-constexpr uint8_t CH2_LED_G = 8;
+constexpr uint8_t CH2_LED_R = 6;
+constexpr uint8_t CH2_LED_G = 7;
 constexpr uint8_t CH2_LED_B = 8;
-constexpr uint8_t CH2_CHG_MOD = 8;
+constexpr uint8_t CH2_CHG_MOD = 28;
 
 // Rotary encoder input
-constexpr uint8_t QUAD_1 = 14;
-constexpr uint8_t QUAD_2 = 15;
+constexpr uint8_t QUAD_1 = 9;
+constexpr uint8_t QUAD_2 = 10;
 
 // Shiftregister Mask Position
 // Position of functions and elements in the shift register mask
-
-// Switchmatrix Columns
-constexpr uint8_t SMCR1 = 1;
-constexpr uint8_t SMCR2 = 0;
 
 // Channel Parameters
 constexpr uint8_t CHANNEL_0 = 0;

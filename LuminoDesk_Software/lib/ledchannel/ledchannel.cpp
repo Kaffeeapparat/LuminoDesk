@@ -1,11 +1,12 @@
 #include "ledchannel.hpp"
 #include <iostream>
 
-Channel::Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t mode_signal, uint8_t voltage_signal, uint8_t enable_signal, uint8_t color_r_signal, uint8_t color_g_signal, uint8_t color_b_signal)
-    : id(id), mode(mode), voltage(voltage), enable(enable), mode_signal(mode_signal), voltage_signal(voltage_signal), enable_signal(enable_signal),  color_r_signal(color_r_signal), color_g_signal(color_g_signal), color_b_signal(color_b_signal), number_of_led(0)
+Channel::Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t mode_signal, uint8_t voltage_signal, uint8_t enable_signal, uint8_t color_r_signal, uint8_t color_g_signal, uint8_t color_b_signal,Shiftregister * shiftregister)
+    : id(id), mode(mode), voltage(voltage), enable(enable), mode_signal(mode_signal), voltage_signal(voltage_signal), enable_signal(enable_signal),  color_r_signal(color_r_signal), color_g_signal(color_g_signal), color_b_signal(color_b_signal), number_of_led(0),attached_shiftregister(shiftregister)
     {
         this->led_strip_data.resize(1);
         this->is_loaded=false;
+        this->led_strip_data[0]={0,0,0};
         this->max_number_of_led=1;
         this->number_of_led=1;
         initChannel();}
@@ -14,7 +15,14 @@ Channel::Channel(){}
 void Channel::setEnable(bool enable)
 {
     this->enable=enable;
-    putEnable();
+    if(this->enable)
+    {
+        attached_shiftregister->setBit(enable_signal);
+    }
+    else
+    {
+        attached_shiftregister->unsetBit(enable_signal);
+    }
 }
 
 bool Channel::getEnable()
@@ -52,13 +60,13 @@ void Channel::toggleEnable()
 {
     if(this->enable)
     {
-        this->enable=false;
+        setEnable(0);
     }
     else if(!this->enable)
     {
-        this->enable=true;
+        setEnable(1);
     }
-    putEnable();
+
 
 }
 
@@ -66,14 +74,29 @@ void Channel::setMode(uint8_t mode)
 {
     if(mode == MODE_ANALOG)
     {
-
+        gpio_put(mode_signal,0);
+        this->mode=MODE_ANALOG;
+        initPWM();
     }
-     this->mode=mode;
+    else
+    {
+        gpio_put(mode_signal,1);
+    this->mode=MODE_DIGITAL;
+        initDigital();
+    }
 }
 
 void Channel::setVoltage(uint8_t voltage)
 {
     this->voltage=voltage;
+    if(voltage==12)
+    {
+        attached_shiftregister->setBit(voltage_signal);
+    }
+    else
+    {
+        attached_shiftregister->unsetBit(voltage_signal);
+    }
 }
 
 void Channel::setModeSignal(uint8_t modeSignal)
@@ -87,18 +110,6 @@ void Channel::setVoltageSignal(uint8_t voltageSignal)
 }
 
 
-void Channel::putEnable()
-{
-    if(this->enable)
-    {
-        gpio_put(this->enable_signal,1);
-    }
-    if(!this->enable)
-    {
-        gpio_put(this->enable_signal,0);
-    }
-}
-
 void Channel::setRGBChannelData(int32_t colorR, int32_t colorG, int32_t colorB)
 {
 
@@ -107,7 +118,7 @@ void Channel::setRGBChannelData(int32_t colorR, int32_t colorG, int32_t colorB)
         this->led_strip_data[0].blue=colorB;
 }
 
-void Channel::setRGBChannelData(RGBColorSelect color, int32_t value)
+void Channel::setRGBChannelData(RGBColorSelect color, uint8_t value)
 {
     switch(color) 
     {
@@ -230,7 +241,7 @@ void Channel::putincRGBChannelData(RGBColorSelect chosen_color, int32_t value)
 
 
 
-uint32_t Channel::getRGBChannelData(RGBColorSelect color)
+uint8_t Channel::getRGBChannelData(RGBColorSelect color)
 {
     switch (color)
     {
@@ -294,6 +305,13 @@ void Channel::initChannel()
 
 void Channel::initPWM()
 {
+        if(isDigitalCoreloaded())
+        {
+            unLoadDigitalCore();
+        }
+    
+        gpio_put(this->mode_signal,0);
+
 
         gpio_set_function(this->color_r_signal,GPIO_FUNC_PWM);
         uint slice_num = pwm_gpio_to_slice_num(this->color_r_signal);
@@ -310,6 +328,7 @@ void Channel::initPWM()
 
 void Channel::initDigital()
 {
+    gpio_put(this->mode_signal,1);
     if(!isDigitalCoreloaded())
     {
     loadDigitalCore(0);
@@ -322,6 +341,9 @@ void Channel::initDigital()
 */
 void Channel::loadDigitalCore(uint8_t pio_select)
 {
+    gpio_deinit(this->color_r_signal);
+
+
     if(isDigitalCoreloaded())
     {
         return;
@@ -337,11 +359,21 @@ void Channel::loadDigitalCore(uint8_t pio_select)
     uint sm=0;
     uint offset= pio_add_program(pio, &ws2812_program);
     this->is_rgbw=false;
-    ws2812_program_init(pio, sm, offset, color_r_signal, 800000, is_rgbw);
+    gpio_init(this->color_b_signal);
+    gpio_set_function(this->color_b_signal,GPIO_FUNC_PIO0);
+    ws2812_program_init(pio, sm, offset, this->color_b_signal, 800000, is_rgbw);
     this->is_loaded=true;
     this->loaded_pio=pio;
     this->loaded_pio_offset=offset;
     this->loaded_pio_sm=sm;
+
+    gpio_set_function(this->color_r_signal,GPIO_FUNC_SIO);
+    gpio_set_function(this->color_g_signal,GPIO_FUNC_SIO);
+    gpio_set_dir(this->color_r_signal,1);
+    gpio_set_dir(this->color_g_signal,1);
+
+    gpio_put(this->color_r_signal,1);
+    gpio_put(this->color_g_signal,1);
 }
 void Channel::unLoadDigitalCore()
 {
@@ -352,6 +384,8 @@ void Channel::unLoadDigitalCore()
     this->loaded_pio_offset=0;
     this->loaded_pio_sm=0;
     }
+
+
 }
 
 

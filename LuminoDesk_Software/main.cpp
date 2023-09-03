@@ -43,6 +43,25 @@ int main() {
 
 
     initGPIO();
+
+    //Create a Shiftregister
+    Shiftregister shiftregister0(SHIFT_LATCH,SHIFT_CLK,SHIFT_DATA,15);
+
+    //Initial SMC Toggle to set up the Switchmatrix
+    shiftregister0.setShiftmask(shiftregisterbitmask);
+    shiftregister0.setBit(SHIFTMASK_SMR0);
+
+    shiftregister0.setBit(CH0_CHG_VLT);
+    shiftregister0.setBit(CH1_CHG_VLT);
+    shiftregister0.setBit(CH2_CHG_VLT);
+
+    shiftregister0.setBit(CH0_ENB_CHN);
+    shiftregister0.setBit(CH1_ENB_CHN);
+    shiftregister0.setBit(CH2_ENB_CHN);
+    
+    shiftregister0.transmit();
+
+
     //Create a datastructure to control the device
     static Device instance;
 
@@ -50,26 +69,21 @@ int main() {
     static Effect effect1;
     static Effect effect2;
 
+
+
     //Create a channel
-    static Channel channel0(0,MODE_ANALOG,5,CH0_CHG_MOD,CH0_CHG_VLT,5,CH0_LED_R,CH0_LED_G,CH0_LED_B);
-    static Channel channel1(1,MODE_DIGITAL,5,CH0_CHG_MOD,CH0_CHG_VLT,6,13,11,12);
-    //Channel channel2(2,MODE_ANALOG,5,CH2_CHG_MOD,CH2_CHG_VLT,5,CH2_LED_R,CH2_LED_G,CH2_LED_B);
+    static Channel channel0(0,MODE_ANALOG,5,CH0_CHG_MOD,CH0_CHG_VLT,CH0_ENB_CHN,CH0_LED_R,CH0_LED_G,CH0_LED_B,&shiftregister0);
+    static Channel channel1(1,MODE_DIGITAL,5,CH1_CHG_MOD,CH1_CHG_VLT,CH1_ENB_CHN,CH1_LED_R,CH1_LED_G,CH1_LED_B,&shiftregister0);
+    static Channel channel2(2,MODE_DIGITAL,5,CH2_CHG_MOD,CH2_CHG_VLT,CH2_ENB_CHN,CH2_LED_R,CH2_LED_G,CH2_LED_B,&shiftregister0);
     
 
 
     instance.addChannel(&channel0,&effect0);
     instance.addChannel(&channel1,&effect1);
+    instance.addChannel(&channel2,&effect2);
     
-    //Create a Shiftregister
-    Shiftregister shiftregister0(SHIFT_LATCH,SHIFT_CLK,SHIFT_DATA,10);
     instance.setActiveColor(RGBColorSelect::RED);
     instance.setActiveChannelId(0); 
-
-    //Initial SMC Toggle to set up the Switchmatrix
-    shiftregister0.setShiftmask(shiftregisterbitmask);
-    shiftregister0.setBit(SHIFTMASK_SMR0);
-
-
 
     //init the rotary encoder
     rotaryencoder1_init();
@@ -155,7 +169,16 @@ int main() {
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::channelonoff_long:
-            // Handle channelonoff_long action
+            uint8_t mode;
+            mode=instance.getActiveChannel()->getMode();
+            if(mode==MODE_ANALOG)
+            {
+                instance.getActiveChannel()->setMode(MODE_DIGITAL);
+            }
+            else
+            {
+                instance.getActiveChannel()->setMode(MODE_ANALOG);
+            }
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::channelonoff_short:
@@ -233,10 +256,12 @@ int main() {
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::empty_long:
+        instance.getActiveChannel()->setVoltage(12);
             // Handle empty_long action
             lastinput = ButtonAction::dummy;
             break;
         case ButtonAction::empty_short:
+        instance.getActiveChannel()->setVoltage(5);
             // Handle empty_short action
             lastinput = ButtonAction::dummy;
             break;

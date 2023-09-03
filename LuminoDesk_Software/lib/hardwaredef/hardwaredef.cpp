@@ -21,8 +21,8 @@ Encoder quad_map[1]={
 Button button_map[2][5] = {
     {{SMC1, SMCR1, 0, 0, ButtonAction::onoff_long, ButtonAction::onoff_short},
      {SMC2, SMCR1, 0, 0, ButtonAction::constant_long, ButtonAction::constant_short},
-     {SMC5, SMCR1, 0, 0, ButtonAction::channelonoff_long, ButtonAction::channelonoff_short},
-     {SMC3, SMCR1, 0, 0, ButtonAction::speed_long, ButtonAction::speed_short},
+     {SMC3, SMCR1, 0, 0, ButtonAction::channelonoff_long, ButtonAction::channelonoff_short},
+     {SMC5, SMCR1, 0, 0, ButtonAction::speed_long, ButtonAction::speed_short},
      {SMC4, SMCR1, 0, 0, ButtonAction::remote_long, ButtonAction::remote_short}},
     {{SMC1, SMCR2, 0, 0, ButtonAction::effect_long, ButtonAction::effect_short},
      {SMC2, SMCR2, 0, 0, ButtonAction::empty_long, ButtonAction::empty_short},

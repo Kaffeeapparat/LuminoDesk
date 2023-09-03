@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../hardwaredef/hardwaredef.hpp"
+#include "../shiftregister/shiftregister.hpp"
 #include "generated/ws2812.pio.h"
 #include <vector>
 
 class Channel {
 public:
     Channel();
-    Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t modeSignal, uint8_t voltageSignal, uint8_t enableSignal, uint8_t colorRSignal, uint8_t colorGSignal, uint8_t colorBSignal);
+    Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t modeSignal, uint8_t voltageSignal, uint8_t enableSignal, uint8_t colorRSignal, uint8_t colorGSignal, uint8_t colorBSignal,Shiftregister* shiftregister);
 
 
     //Inits the pins of the Device
@@ -15,7 +16,6 @@ public:
 
     //Set the Channel enable or Disable
     void setEnable(bool enable);
-    void putEnable();
     void toggleEnable();
 
     void setMode(uint8_t mode);
@@ -34,15 +34,14 @@ public:
 
     //
     void setRGBChannelData(int32_t color_r, int32_t color_g, int32_t color_b);
-    void setRGBChannelData(RGBColorSelect color, int32_t value);
-    void setRGBChannelData(RGBColorSelect color, int32_t value,int32_t dir);
+    void setRGBChannelData(RGBColorSelect color, uint8_t value);
     void setRGBChannelData(std::vector<int32_t>& color_r,std::vector<int32_t>& color_g,std::vector<int32_t>& color_b,std::vector<bool>& ledNumber);
     void setRGBChannelData(std::vector<RGBColor>);
 
     void putincRGBChannelData(RGBColorSelect color, int32_t value);
     void putRGBChannelData();
 
-    uint32_t getRGBChannelData(RGBColorSelect color);
+    uint8_t getRGBChannelData(RGBColorSelect color);
     std::vector<RGBColor> getRGBChannelData();
     RGBColor getRGBChannelData(uint32_t pos);
 
@@ -96,5 +95,8 @@ private:
 
     void getFirstElementOfColorVector(RGBColorSelect color);
     uint32_t setFirstElementOfColorVector(RGBColorSelect color);
+
+    Shiftregister* attached_shiftregister;
+
 
 };

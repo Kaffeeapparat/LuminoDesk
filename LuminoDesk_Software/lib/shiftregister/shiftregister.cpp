@@ -37,7 +37,7 @@ void Shiftregister::setShiftmask(uint32_t& shiftmask)
 }
 
 void Shiftregister::transmit(){
-    for(int k=0;k<16;k++)
+    for(int k=0;k<24;k++)
         {
         gpio_put(this->clk_pin,0);
         if(shiftregisterbitmask & (1<< k)){
