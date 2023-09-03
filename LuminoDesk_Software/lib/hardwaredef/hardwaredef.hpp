@@ -217,7 +217,12 @@ enum class EffectList {
 };
 
 
+enum class ButtonState {
+    WAIT_FOR_PRESS,
+    WAIT_FOR_RELEASE
+    };
 
+extern ButtonState buttonstate;
 extern Button button_map[2][5];
 extern Encoder encoder_map[1];
 extern ButtonAction lastinput;

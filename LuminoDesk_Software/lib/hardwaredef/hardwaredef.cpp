@@ -108,6 +108,7 @@ void initGPIO(void)
 
 int8_t pressed_button_lock=0;
 uint32_t pressed_button_time;
+ButtonState buttonstate;
 Button pressed_button;
 
 const uint32_t debounce_threshold=20;
@@ -126,8 +127,6 @@ void button_isr(uint gpio, uint32_t events)
         gpio_acknowledge_irq(gpio,GPIO_IRQ_EDGE_FALL);
     }
 
-
-
     int i=0;
     int pos=-1;
     int row;
@@ -140,11 +139,6 @@ void button_isr(uint gpio, uint32_t events)
     else if(shiftregisterbitmask&(1<<SHIFTMASK_SMR1))
     {
         row=0;
-    }
-    else
-    {
-        std::cout << "Eror, No Shiftmask set" << "\n";
-        return;
     }
 
     for(int j=0;j<5;j++)
@@ -163,52 +157,77 @@ void button_isr(uint gpio, uint32_t events)
 
     i=pos;
     uint32_t current_time=to_ms_since_boot(get_absolute_time());
-
+/*
     if(button_map[row][pos].debouncelock>current_time)
     {
         //std::cout << "presed burtton lock unset in isr" << "\n";
         pressed_button_lock=0;
         return;
     }
-
-    if(GPIO_IRQ_EDGE_FALL==events)
+*/
+    switch(buttonstate)
     {
-                //std::cout << "presed burtton lock set in isr" << "\n";
+        case ButtonState::WAIT_FOR_PRESS:
+  
+            if(GPIO_IRQ_EDGE_FALL==events)
+            {
+                pressed_button_lock=1;
+                button_map[row][pos].timestamp=current_time;
 
-        pressed_button_lock=1;
-        button_map[row][pos].timestamp=current_time;
-    }
-
-    if(GPIO_IRQ_EDGE_RISE==events)
-    {
+                buttonstate=ButtonState::WAIT_FOR_RELEASE;
+            }
+        break;
+        case ButtonState::WAIT_FOR_RELEASE:
         uint32_t deltat=current_time-button_map[row][i].timestamp;
 
-        if(deltat<=debounce_threshold)
-        {
-            tight_loop_contents();
-        }
-        else if(deltat>=failure_threshold)
-        {
-            button_map[row][pos].timestamp=0;
-            button_map[row][pos].debouncelock=current_time+debouncelock_threshold;
-            button_map[row][pos].debouncelock=current_time+debouncelock_threshold;
-            pressed_button_lock=0;
-        }
-        else if(deltat>longpress_threshold)
-        {
-            button_map[row][pos].timestamp=0;
-            button_map[row][pos].debouncelock=current_time+debouncelock_threshold;
-            lastinput=button_map[row][pos].longpress;
-            pressed_button_lock=0;
-        }
-        else if(deltat<longpress_threshold)
-        {
-            button_map[row][pos].timestamp=0;
-            button_map[row][pos].debouncelock=current_time+debouncelock_threshold;
-            lastinput=button_map[row][pos].shortpress;
-            pressed_button_lock=0;
-        }
+            if(GPIO_IRQ_EDGE_RISE==events)
+            {
+
+                if(deltat<=debounce_threshold)
+                {
+                    tight_loop_contents();
+                
+                }
+                else if(deltat>=failure_threshold)
+                {
+                    button_map[row][pos].timestamp=0;
+                    button_map[row][pos].debouncelock=current_time+debouncelock_threshold;
+                    pressed_button_lock=0;
+
+                    buttonstate=ButtonState::WAIT_FOR_PRESS;
+                }
+                else if(deltat>longpress_threshold)
+                {
+                    button_map[row][pos].timestamp=0;
+                    button_map[row][pos].debouncelock=current_time+debouncelock_threshold;
+                    lastinput=button_map[row][pos].longpress;
+                    pressed_button_lock=0;
+
+                    buttonstate=ButtonState::WAIT_FOR_PRESS;
+                }
+                else if(deltat<longpress_threshold)
+                {
+                    button_map[row][pos].timestamp=0;
+                    button_map[row][pos].debouncelock=current_time+debouncelock_threshold;
+                    lastinput=button_map[row][pos].shortpress;
+                    pressed_button_lock=0;
+
+                    buttonstate=ButtonState::WAIT_FOR_PRESS;
+                }
+                
+            }
+            if(deltat>=failure_threshold)
+                {
+                    button_map[row][pos].timestamp=0;
+                    button_map[row][pos].debouncelock=current_time+debouncelock_threshold;
+                    pressed_button_lock=0;
+
+                    buttonstate=ButtonState::WAIT_FOR_PRESS;
+                }
+        break;
+
     }
+
 }
 
 void checkButtonDebounceLock(){
@@ -219,6 +238,7 @@ void checkButtonDebounceLock(){
             for(int pos=0;pos<5;pos++){
                     if(button_map[row][pos].debouncelock>current_time){
                         pressed_button_lock=0;
+                        buttonstate=ButtonState::WAIT_FOR_PRESS;
                     }
                 }
 
