@@ -150,40 +150,40 @@
            this->parameter0=0;
            this->parameter1=0;
            
-           this->parameter1_max=300;
-           this->parameter1_min=0;
-           this->parameter0_max=300;
-           this->parameter0_min=0;
             break;
         case EffectList::RAMP:
            this->active_effect=EffectList::GLOW;
            this->parameter0=0;
            this->parameter1=0;
            
-           this->parameter1_max=300;
-           this->parameter1_min=0;
-           this->parameter0_max=300;
-           this->parameter0_min=0;
             break;
         case EffectList::GLOW:
             this->active_effect=EffectList::GLOW_MULTI;
+            this->parameter0=0;
+            this->parameter1=0;
+           
             break;
         case EffectList::GLOW_MULTI:
             this->active_effect=EffectList::SNAKE;
-            if(this->attached_channel->getMode()==MODE_ANALOG)this->active_effect=EffectList::DISCO;
-
-             break;
-        case EffectList::SNAKE:
-            //Loopback
-           this->active_effect=EffectList::COLORBAND; 
-           this->parameter0=100;
-           this->parameter1=200;
+            this->parameter0=0;
+            this->parameter1=0;
+            if(this->attached_channel->getMode()==MODE_ANALOG)
+            {
+            this->active_effect=EffectList::DISCO;
+            this->parameter0=100;
+            this->parameter1=200;
            
             this->parameter1_max=300;
             this->parameter1_min=150;
             this->parameter0_max=150;
             this->parameter0_min=0;
-           
+            }
+             break;
+        case EffectList::SNAKE:
+            //Loopback
+            this->active_effect=EffectList::COLORBAND; 
+            this->parameter0=0;
+            this->parameter1=0;           
            break;
         case EffectList::COLORBAND:
             this->active_effect=EffectList::SPARKLE;
@@ -192,8 +192,13 @@
             break;
         case EffectList::SPARKLE:
             this->active_effect=EffectList::DISCO;
-            this->parameter0=0;
-            this->parameter1=0;
+            this->parameter0=100;
+            this->parameter1=200;
+           
+            this->parameter1_max=300;
+            this->parameter1_min=150;
+            this->parameter0_max=150;
+            this->parameter0_min=0;
             break;
         default:
             break;
