@@ -133,6 +133,8 @@ RGBColorSelect Device::getActiveColor()
 }
 void Device::updateDeviceStateSignals(Shiftregister& shift_register)
 {
+    if(this->active_state==DeviceState::OPERATION_CONST || this->active_side_state==SideState::change_color1_of_effect)
+    {
     switch (this->active_color)
     {
         case RGBColorSelect::RED:
@@ -176,7 +178,13 @@ void Device::updateDeviceStateSignals(Shiftregister& shift_register)
             shift_register.unsetBit(LED_B);
             break;
     }
-
+    }
+    else
+    {
+            shift_register.unsetBit(LED_R);
+            shift_register.unsetBit(LED_G);
+            shift_register.unsetBit(LED_B);        
+    }
     switch (this->active_channel->getId())
     {
         case 0:

@@ -317,7 +317,7 @@ int main() {
                     instance.getActiveChannel()->putRGBChannelData();
                 }
                 //If the Mode is Analog, chh
-                else if(instance.getSideState()==SideState::change_led_color_and_channel)
+                else if(instance.getSideState()==SideState::change_led_color_and_channel&& instance.getActiveState()==DeviceState::OPERATION_CONST)
                 {
                     if(instance.getActiveChannel())
                     instance.getActiveChannel()->putincRGBChannelData(instance.getActiveColor(),tmpencoderval);
