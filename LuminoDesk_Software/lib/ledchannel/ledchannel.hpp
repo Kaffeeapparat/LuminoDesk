@@ -8,7 +8,7 @@
 class Channel {
 public:
     Channel();
-    Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t modeSignal, uint8_t voltageSignal, uint8_t enableSignal, uint8_t colorRSignal, uint8_t colorGSignal, uint8_t colorBSignal,Shiftregister* shiftregister);
+    Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t modeSignal, uint8_t voltageSignal, uint8_t enableSignal, uint8_t colorRSignal, uint8_t colorGSignal, uint8_t colorBSignal,Shiftregister* shiftregister,uint8_t pio, uint8_t sm);
 
 
     //Inits the pins of the Device
@@ -49,7 +49,7 @@ public:
     //Digital Mode initialisation and usage methods
 
     void initDigital();
-    void loadDigitalCore(uint8_t pio_select);
+    void loadDigitalCore();
     void unLoadDigitalCore();
     bool isDigitalCoreloaded();
     void putDigitalLED();
@@ -86,7 +86,7 @@ private:
     uint32_t max_number_of_led;
     std::vector<RGBColor> led_strip_data;
 
-    uint8_t position_digital_core;
+    uint8_t used_pio;
     PIO loaded_pio;
     uint8_t loaded_pio_offset;
     uint8_t loaded_pio_sm;

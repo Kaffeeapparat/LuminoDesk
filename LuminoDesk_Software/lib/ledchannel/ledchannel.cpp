@@ -1,8 +1,11 @@
 #include "ledchannel.hpp"
 #include <iostream>
 
-Channel::Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t mode_signal, uint8_t voltage_signal, uint8_t enable_signal, uint8_t color_r_signal, uint8_t color_g_signal, uint8_t color_b_signal,Shiftregister * shiftregister)
-    : id(id), mode(mode), voltage(voltage), enable(enable), mode_signal(mode_signal), voltage_signal(voltage_signal), enable_signal(enable_signal),  color_r_signal(color_r_signal), color_g_signal(color_g_signal), color_b_signal(color_b_signal), number_of_led(0),attached_shiftregister(shiftregister)
+Channel::Channel(uint8_t id, uint8_t mode, uint8_t voltage, uint8_t mode_signal, uint8_t voltage_signal, uint8_t enable_signal, uint8_t color_r_signal, uint8_t color_g_signal, uint8_t color_b_signal,Shiftregister * shiftregister,uint8_t pio, uint8_t sm)
+    : id(id), mode(mode), voltage(voltage), enable(enable), mode_signal(mode_signal), 
+    voltage_signal(voltage_signal), enable_signal(enable_signal),
+    color_r_signal(color_r_signal), color_g_signal(color_g_signal), color_b_signal(color_b_signal),
+    number_of_led(0),attached_shiftregister(shiftregister),used_pio(pio),loaded_pio_sm(sm)
     {
         this->led_strip_data.resize(1);
         this->is_loaded=false;
@@ -331,7 +334,7 @@ void Channel::initDigital()
     gpio_put(this->mode_signal,1);
     if(!isDigitalCoreloaded())
     {
-    loadDigitalCore(0);
+    loadDigitalCore();
     }
 }
 
@@ -339,31 +342,36 @@ void Channel::initDigital()
 * false to use pio0
 * true to use pio1
 */
-void Channel::loadDigitalCore(uint8_t pio_select)
+void Channel::loadDigitalCore()
 {
     if(isDigitalCoreloaded())
     {
         return;
     }
-    PIO pio;
-    if(pio_select==0){
-        pio=pio0;
+    
+    if(this->used_pio==0){
+        this->loaded_pio=pio0;
     }
     else
     {
-        pio=pio1;
+        this->loaded_pio=pio1;
     }
-    uint sm=0;
-    uint offset= pio_add_program(pio, &ws2812_program);
-    this->is_rgbw=false;
-    gpio_init(this->color_b_signal);
-    gpio_set_function(this->color_b_signal,GPIO_FUNC_PIO0);
-    ws2812_program_init(pio, sm, offset, this->color_b_signal, 800000, is_rgbw);
-    this->is_loaded=true;
-    this->loaded_pio=pio;
-    this->loaded_pio_offset=offset;
-    this->loaded_pio_sm=sm;
 
+    gpio_deinit(this->color_b_signal);
+    gpio_deinit(this->color_g_signal);
+    gpio_deinit(this->color_r_signal);
+
+    this->loaded_pio_offset= pio_add_program(this->loaded_pio, &ws2812_program);
+    this->is_rgbw=false;
+
+    gpio_init(this->color_b_signal);
+    gpio_set_dir(this->color_b_signal,1);
+    gpio_set_function(this->color_b_signal,GPIO_FUNC_PIO0);
+    ws2812_program_init(this->loaded_pio, this->loaded_pio_sm, this->loaded_pio_offset, this->color_b_signal, 800000, is_rgbw);
+
+
+    gpio_init(this->color_g_signal);
+    gpio_init(this->color_r_signal);
     gpio_set_function(this->color_r_signal,GPIO_FUNC_SIO);
     gpio_set_function(this->color_g_signal,GPIO_FUNC_SIO);
     gpio_set_dir(this->color_r_signal,1);
@@ -379,7 +387,6 @@ void Channel::unLoadDigitalCore()
     this->is_loaded=false;
     this->loaded_pio=NULL;
     this->loaded_pio_offset=0;
-    this->loaded_pio_sm=0;
     }
 
 

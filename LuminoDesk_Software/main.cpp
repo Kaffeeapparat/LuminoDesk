@@ -72,9 +72,9 @@ int main() {
 
 
     //Create a channel
-    static Channel channel0(0,MODE_ANALOG,5,CH0_CHG_MOD,CH0_CHG_VLT,CH0_ENB_CHN,CH0_LED_R,CH0_LED_G,CH0_LED_B,&shiftregister0);
-    static Channel channel1(1,MODE_DIGITAL,5,CH1_CHG_MOD,CH1_CHG_VLT,CH1_ENB_CHN,CH1_LED_R,CH1_LED_G,CH1_LED_B,&shiftregister0);
-    static Channel channel2(2,MODE_DIGITAL,5,CH2_CHG_MOD,CH2_CHG_VLT,CH2_ENB_CHN,CH2_LED_R,CH2_LED_G,CH2_LED_B,&shiftregister0);
+    static Channel channel0(0,MODE_ANALOG,5,CH0_CHG_MOD,CH0_CHG_VLT,CH0_ENB_CHN,CH0_LED_R,CH0_LED_G,CH0_LED_B,&shiftregister0,0,0);
+    static Channel channel1(1,MODE_DIGITAL,5,CH1_CHG_MOD,CH1_CHG_VLT,CH1_ENB_CHN,CH1_LED_R,CH1_LED_G,CH1_LED_B,&shiftregister0,0,1);
+    static Channel channel2(2,MODE_DIGITAL,5,CH2_CHG_MOD,CH2_CHG_VLT,CH2_ENB_CHN,CH2_LED_R,CH2_LED_G,CH2_LED_B,&shiftregister0,0,2);
     
 
 
