@@ -461,14 +461,20 @@
         }
         }
         double rotationstep=(double)1.0/(double)this->normal_time;
-        uint32_t number_of_roationsteps=0;
+        int32_t number_of_rotationsteps=this->attached_channel->getMaxNumberOfLeds()/color_passages;
 
-        for(double n=0;n<timeratio;n+=rotationstep){
-            number_of_roationsteps++;
+        number_of_rotationsteps-=number_of_rotationsteps*(3/2);
+        number_of_rotationsteps+=this->attached_channel->getMaxNumberOfLeds()/color_passages*timeratio;
+
+        if(number_of_rotationsteps>1)
+        {
+        std::rotate(returnvector.begin(),(returnvector.begin()+number_of_rotationsteps*2),returnvector.begin()+this->attached_channel->getNumberOfLeds());
         }
-
-        std::rotate(returnvector.begin(),returnvector.begin()+number_of_roationsteps*2,returnvector.begin()+this->attached_channel->getNumberOfLeds());
-        
+        else
+        {
+        number_of_rotationsteps=std::abs(number_of_rotationsteps);
+        std::rotate(returnvector.begin()+this->attached_channel->getNumberOfLeds(),(returnvector.begin()+number_of_rotationsteps*2),returnvector.begin());
+        }
         return returnvector;
     }
 
