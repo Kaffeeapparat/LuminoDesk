@@ -169,10 +169,9 @@
             this->active_effect=EffectList::GLOW_MULTI;
             break;
         case EffectList::GLOW_MULTI:
-        //this->active_effect=EffectList::BALL;
-        //    break;
-        // case EffectList::BALL:
             this->active_effect=EffectList::SNAKE;
+            if(this->attached_channel->getMode()==MODE_ANALOG)this->active_effect=EffectList::DISCO;
+
              break;
         case EffectList::SNAKE:
             //Loopback
@@ -192,7 +191,7 @@
             this->parameter1=0;
             break;
         case EffectList::SPARKLE:
-            this->active_effect=EffectList::RAMP;
+            this->active_effect=EffectList::DISCO;
             this->parameter0=0;
             this->parameter1=0;
             break;

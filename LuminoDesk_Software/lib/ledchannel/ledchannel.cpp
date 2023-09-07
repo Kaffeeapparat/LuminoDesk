@@ -84,7 +84,7 @@ void Channel::setMode(uint8_t mode)
     else
     {
         gpio_put(mode_signal,1);
-    this->mode=MODE_DIGITAL;
+        this->mode=MODE_DIGITAL;
         initDigital();
     }
 }
@@ -314,6 +314,7 @@ void Channel::initPWM()
         }
     
         gpio_put(this->mode_signal,0);
+        this->mode=MODE_ANALOG;
 
 
         gpio_set_function(this->color_r_signal,GPIO_FUNC_PWM);
@@ -332,6 +333,8 @@ void Channel::initPWM()
 void Channel::initDigital()
 {
     gpio_put(this->mode_signal,1);
+    this->mode=MODE_DIGITAL;
+
     if(!isDigitalCoreloaded())
     {
     loadDigitalCore();
