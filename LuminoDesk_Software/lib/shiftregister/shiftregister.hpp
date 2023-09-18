@@ -3,6 +3,12 @@
 #include "../hardwaredef/hardwaredef.hpp"
 #include "hardware/gpio.h"
 
+/*
+*   Functions to manipulate the shift register
+*   
+*   On the Hardware are multiple Shift registers. The Registers are all 
+*   handled by the variable shiftmask. 
+*/
 class Shiftregister{
 private:
     uint32_t& shiftmask;

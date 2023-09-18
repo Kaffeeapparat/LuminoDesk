@@ -17,32 +17,42 @@ public:
     void setCurrentTime(int32_t time);
     uint32_t getCurrentTime();
 
+    
     void incCurentTimeByTick();
 
+    //Some effect have Parameters to change the properties
     void setParameter1(int32_t param);
     uint32_t getParameter1();
     void setParameter0(int32_t param);
     uint32_t getParameter0();
 
+
+    //Primary Color
     void setColor0(RGBColor color);
     void setColor0(RGBColorSelect chosen_color,int32_t value);
     RGBColor getColor0();
 
+    //Secondary Color
     void setColor1(RGBColor color);
     void setColor1(RGBColorSelect chosen_color,int32_t value);
     RGBColor getColor1();
 
+    //The LED Information is carried by vectors
     std::vector<RGBColor> getEffectColors();
     void setEffectColors(std::vector<RGBColor>);
     void resetEffectColors();
 
+    //Change the effects
+    //Analog and Digital Effects are detemined by checking the attached Channels
     void setEffect(EffectList effect);
     void toggleEffect();
     EffectList getEffect();
 
+    
     void updateEffect();
     void setChannel(Channel* channel);
 
+    //Helper Function
     RGBColor overlayColors(RGBColor n,RGBColor m);
     
     

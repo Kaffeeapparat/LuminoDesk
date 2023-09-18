@@ -304,6 +304,7 @@ void Channel::initChannel()
         {
             printf("Error no Mode For Channel %d!\n",getId());
         }
+        setVoltage(voltage);
 }
 
 void Channel::initPWM()
