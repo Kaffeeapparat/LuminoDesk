@@ -17,7 +17,8 @@ public:
     //Set the Channel enable or Disable
     void setEnable(bool enable);
     void toggleEnable();
-
+    
+    //Setting and Getting funktionb 
     void setMode(uint8_t mode);
     void setVoltage(uint8_t voltage);
     void setModeSignal(uint8_t modeSignal);
